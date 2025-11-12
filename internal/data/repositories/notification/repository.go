@@ -47,7 +47,14 @@ func (repo *notificationRepositoryImpl) CreateNotification(
 	message string,
 ) (*Notification, error) {
 	query := `
-		INSERT INTO notifications (id, user_id, title, message, sent_at, created_at)
+		INSERT INTO notifications (
+			id,
+			user_id,
+			title,
+			message,
+			sent_at,
+			created_at
+		)
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id, user_id, title, message, sent_at, created_at
 	`

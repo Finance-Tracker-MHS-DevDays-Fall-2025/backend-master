@@ -57,8 +57,26 @@ func (repo *analyzerRepositoryImpl) GetStatistics(
 ) (totalIncome int64, totalExpense int64, err error) {
 	query := `
 		SELECT 
-			COALESCE(SUM(CASE WHEN type = 'INCOME' THEN amount ELSE 0 END), 0) as total_income,
-			COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
+			COALESCE(
+				SUM(
+					CASE 
+						WHEN type = 'INCOME' 
+						THEN amount 
+						ELSE 0 
+					END
+				),
+				0
+			) as total_income,
+			COALESCE(
+				SUM(
+					CASE
+						WHEN type = 'EXPENSE'
+						THEN amount
+						ELSE 0
+					END
+				),
+				0
+			) as total_expense
 		FROM transactions t
 		JOIN accounts a ON t.account_id = a.id
 		WHERE a.user_id = $1
@@ -94,10 +112,40 @@ func (repo *analyzerRepositoryImpl) GetPeriodBalances(
 		SELECT 
 			date_trunc($1, t.created_at) as period_start,
 			date_trunc($1, t.created_at) + interval '1 ' || $1 as period_end,
-			COALESCE(SUM(CASE WHEN type = 'INCOME' THEN amount ELSE 0 END), 0) as income,
-			COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as expense,
-			COALESCE(SUM(CASE WHEN type = 'INCOME' THEN amount WHEN type = 'EXPENSE' THEN -amount ELSE 0 END), 0) as balance,
+
+			COALESCE(
+				SUM(
+					CASE 
+						WHEN type = 'INCOME' THEN amount
+						ELSE 0
+					END
+				),
+				0
+			) as income,
+			
+			COALESCE(
+				SUM(
+					CASE
+						WHEN type = 'EXPENSE' THEN amount
+						ELSE 0
+					END
+				),
+				0
+			) as expense,
+			
+			COALESCE(
+				SUM(
+					CASE
+						WHEN type = 'INCOME' THEN amount
+						WHEN type = 'EXPENSE' THEN -amount
+						ELSE 0
+					END
+				),
+				0
+			) as balance,
+			
 			t.currency
+
 		FROM transactions t
 		JOIN accounts a ON t.account_id = a.id
 		WHERE a.user_id = $2
@@ -128,7 +176,10 @@ func (repo *analyzerRepositoryImpl) GetCategorySpending(
 ) ([]CategorySpending, error) {
 	query := `
 		SELECT 
-			COALESCE(t.category_id::text, 'uncategorized') as category_id,
+			COALESCE(
+				t.category_id::text,
+				'uncategorized'
+			) as category_id,
 			SUM(t.amount) as total_amount,
 			t.currency
 		FROM transactions t
@@ -153,4 +204,3 @@ func (repo *analyzerRepositoryImpl) GetCategorySpending(
 
 	return spending, nil
 }
-

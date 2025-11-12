@@ -20,13 +20,14 @@ import (
 var swaggerJSON []byte
 
 type Service interface {
-	Start(httpAddr, grpcAddr string) error
+	Start() error
 	Shutdown() error
 }
 
 type serviceImpl struct {
 	Service
 
+	cfg        *configs.ServiceConfig
 	grpcServer *grpc.Server
 	ginEngine  *gin.Engine
 	logger     *zap.Logger
@@ -43,6 +44,7 @@ func NewService(
 	pb.RegisterMasterServiceServer(grpcServer, masterService)
 
 	s := &serviceImpl{
+		cfg:        cfg,
 		grpcServer: grpcServer,
 		ginEngine:  gin.New(),
 		logger:     logger,
@@ -51,16 +53,19 @@ func NewService(
 	return s
 }
 
-func (s *serviceImpl) Start(httpAddr, grpcAddr string) error {
+func (s *serviceImpl) Start() error {
 	ctx := context.Background()
 
+	grpcPort := s.cfg.ServerCfg.GrpcPort
+	httpPort := s.cfg.ServerCfg.HttpPort
+
 	go func() {
-		lis, err := net.Listen("tcp", grpcAddr)
+		lis, err := net.Listen("tcp", s.cfg.ServerCfg.GrpcPort)
 		if err != nil {
 			s.logger.Fatal("failed to listen gRPC", zap.Error(err))
 		}
 
-		s.logger.Info("starting gRPC server", zap.String("addr", grpcAddr))
+		s.logger.Info("starting gRPC server", zap.String("addr", grpcPort))
 
 		if err := s.grpcServer.Serve(lis); err != nil {
 			s.logger.Fatal("gRPC server failed", zap.Error(err))
@@ -72,7 +77,12 @@ func (s *serviceImpl) Start(httpAddr, grpcAddr string) error {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
-	err := pb.RegisterMasterServiceHandlerFromEndpoint(ctx, grpcMux, grpcAddr, opts)
+	err := pb.RegisterMasterServiceHandlerFromEndpoint(
+		ctx,
+		grpcMux,
+		grpcPort,
+		opts,
+	)
 	if err != nil {
 		s.logger.Fatal("failed to register gateway", zap.Error(err))
 	}
@@ -85,9 +95,9 @@ func (s *serviceImpl) Start(httpAddr, grpcAddr string) error {
 	apiV1Router := apiRouter.Group("/v1")
 	apiV1Router.Any("/*path", gin.WrapH(grpcMux))
 
-	s.logger.Info("starting HTTP server", zap.String("addr", httpAddr))
+	s.logger.Info("starting HTTP server", zap.String("addr", httpPort))
 
-	return s.ginEngine.Run(httpAddr)
+	return s.ginEngine.Run(httpPort)
 }
 
 func (s *serviceImpl) Shutdown() error {

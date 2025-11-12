@@ -8,7 +8,4 @@ generate-http:
 
 .PHONY: protogen
 protogen:
-	protoc \
-		--go_out=./internal/data/generated/ \
-		--go-grpc_out=./internal/data/generated/
-		./proto/service.proto
+	buf generate ./internal/api/proto/

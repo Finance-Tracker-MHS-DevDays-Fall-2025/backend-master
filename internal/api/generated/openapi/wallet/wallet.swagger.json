@@ -1,0 +1,175 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "wallet/wallet.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "WalletService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "commonAccountBackend": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "commonAccountType": {
+      "type": "string",
+      "enum": [
+        "ACCOUNT_TYPE_UNSPECIFIED",
+        "ACCOUNT_TYPE_REGULAR",
+        "ACCOUNT_TYPE_INVESTMENT"
+      ],
+      "default": "ACCOUNT_TYPE_UNSPECIFIED"
+    },
+    "commonMoney": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
+    "commonTransactionType": {
+      "type": "string",
+      "enum": [
+        "TRANSACTION_TYPE_UNSPECIFIED",
+        "TRANSACTION_TYPE_INCOME",
+        "TRANSACTION_TYPE_EXPENSE",
+        "TRANSACTION_TYPE_TRANSFER"
+      ],
+      "default": "TRANSACTION_TYPE_UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "walletAccount": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/commonAccountType"
+        },
+        "balance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "walletGetAccountsResponse": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/walletAccount"
+          }
+        }
+      }
+    },
+    "walletGetTransactionsResponse": {
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/walletTransaction"
+          }
+        }
+      }
+    },
+    "walletTransaction": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/commonTransactionType"
+        },
+        "amount": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "category": {
+          "type": "string"
+        },
+        "fromAccountId": {
+          "type": "string"
+        },
+        "toAccountId": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,465 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "master/master.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "MasterService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/analytics": {
+      "post": {
+        "operationId": "MasterService_GetAnalytics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/masterGetAnalyticsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/masterGetAnalyticsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MasterService"
+        ]
+      }
+    },
+    "/v1/forecast": {
+      "post": {
+        "operationId": "MasterService_GetForecast",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/masterGetForecastResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/masterGetForecastRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MasterService"
+        ]
+      }
+    },
+    "/v1/transactions": {
+      "post": {
+        "operationId": "MasterService_CreateTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/masterCreateTransactionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/masterCreateTransactionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MasterService"
+        ]
+      }
+    },
+    "/v1/users/{userId}/balance": {
+      "get": {
+        "operationId": "MasterService_GetBalance",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/masterGetBalanceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MasterService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "analyzerCategorySpending": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string"
+        },
+        "totalAmount": {
+          "$ref": "#/definitions/commonMoney"
+        }
+      }
+    },
+    "analyzerForecast": {
+      "type": "object",
+      "properties": {
+        "periodStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expectedIncome": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expectedExpense": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expectedBalance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "categoryBreakdown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerCategorySpending"
+          }
+        }
+      }
+    },
+    "analyzerGetStatisticsResponse": {
+      "type": "object",
+      "properties": {
+        "totalIncome": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "totalExpense": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "periodData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerPeriodBalance"
+          }
+        }
+      }
+    },
+    "analyzerPeriodBalance": {
+      "type": "object",
+      "properties": {
+        "periodStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "income": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expense": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "balance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "categoryBreakdown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerCategorySpending"
+          }
+        }
+      }
+    },
+    "commonAccountType": {
+      "type": "string",
+      "enum": [
+        "ACCOUNT_TYPE_UNSPECIFIED",
+        "ACCOUNT_TYPE_REGULAR",
+        "ACCOUNT_TYPE_INVESTMENT"
+      ],
+      "default": "ACCOUNT_TYPE_UNSPECIFIED"
+    },
+    "commonMoney": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
+    "commonTimePeriod": {
+      "type": "string",
+      "enum": [
+        "TIME_PERIOD_UNSPECIFIED",
+        "TIME_PERIOD_MONTH",
+        "TIME_PERIOD_QUARTER",
+        "TIME_PERIOD_YEAR"
+      ],
+      "default": "TIME_PERIOD_UNSPECIFIED"
+    },
+    "commonTransactionType": {
+      "type": "string",
+      "enum": [
+        "TRANSACTION_TYPE_UNSPECIFIED",
+        "TRANSACTION_TYPE_INCOME",
+        "TRANSACTION_TYPE_EXPENSE",
+        "TRANSACTION_TYPE_TRANSFER"
+      ],
+      "default": "TRANSACTION_TYPE_UNSPECIFIED"
+    },
+    "masterCreateTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/commonTransactionType"
+        },
+        "amount": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "fromAccountId": {
+          "type": "string"
+        },
+        "toAccountId": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "masterCreateTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "$ref": "#/definitions/walletTransaction"
+        }
+      }
+    },
+    "masterGetAnalyticsRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "masterGetAnalyticsResponse": {
+      "type": "object",
+      "properties": {
+        "statistics": {
+          "$ref": "#/definitions/analyzerGetStatisticsResponse"
+        }
+      }
+    },
+    "masterGetBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "totalBalance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/walletAccount"
+          }
+        }
+      }
+    },
+    "masterGetForecastRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/definitions/commonTimePeriod"
+        },
+        "periodsAhead": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "masterGetForecastResponse": {
+      "type": "object",
+      "properties": {
+        "forecasts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerForecast"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "walletAccount": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/commonAccountType"
+        },
+        "balance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "walletTransaction": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/commonTransactionType"
+        },
+        "amount": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "category": {
+          "type": "string"
+        },
+        "fromAccountId": {
+          "type": "string"
+        },
+        "toAccountId": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

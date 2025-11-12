@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "api-common";
+
+import "google/protobuf/timestamp.proto";
+
+message Money {
+  int64 amount = 1;
+  string currency = 2;
+}
+
+message AccountBackend {
+  string type = 1;
+  string account_id = 2;
+  string token = 3;
+}
+
+enum TransactionType {
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  TRANSACTION_TYPE_INCOME = 1;
+  TRANSACTION_TYPE_EXPENSE = 2;
+  TRANSACTION_TYPE_TRANSFER = 3;
+}
+
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  ACCOUNT_TYPE_REGULAR = 1;
+  ACCOUNT_TYPE_INVESTMENT = 2;
+}
+
+enum TimePeriod {
+  TIME_PERIOD_UNSPECIFIED = 0;
+  TIME_PERIOD_MONTH = 1;
+  TIME_PERIOD_QUARTER = 2;
+  TIME_PERIOD_YEAR = 3;
+}

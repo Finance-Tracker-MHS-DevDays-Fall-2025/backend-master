@@ -1,2 +1,4 @@
 .vscode
 !.vscode/configuration-schema.json
+
+.DS_STORE

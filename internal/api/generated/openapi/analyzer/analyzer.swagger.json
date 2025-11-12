@@ -1,0 +1,170 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "analyzer/analyzer.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AnalyzerService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "analyzerCategorySpending": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string"
+        },
+        "totalAmount": {
+          "$ref": "#/definitions/commonMoney"
+        }
+      }
+    },
+    "analyzerForecast": {
+      "type": "object",
+      "properties": {
+        "periodStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expectedIncome": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expectedExpense": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expectedBalance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "categoryBreakdown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerCategorySpending"
+          }
+        }
+      }
+    },
+    "analyzerGetForecastResponse": {
+      "type": "object",
+      "properties": {
+        "forecasts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerForecast"
+          }
+        }
+      }
+    },
+    "analyzerGetStatisticsResponse": {
+      "type": "object",
+      "properties": {
+        "totalIncome": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "totalExpense": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "periodData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerPeriodBalance"
+          }
+        }
+      }
+    },
+    "analyzerPeriodBalance": {
+      "type": "object",
+      "properties": {
+        "periodStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "income": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expense": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "balance": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "categoryBreakdown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerCategorySpending"
+          }
+        }
+      }
+    },
+    "commonMoney": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
+    "commonTimePeriod": {
+      "type": "string",
+      "enum": [
+        "TIME_PERIOD_UNSPECIFIED",
+        "TIME_PERIOD_MONTH",
+        "TIME_PERIOD_QUARTER",
+        "TIME_PERIOD_YEAR"
+      ],
+      "default": "TIME_PERIOD_UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"backend-master/configs"
 	pb "backend-master/internal/api/generated/proto/master"
 	"backend-master/internal/presentation"
 	"backend-master/internal/presentation/docs"
@@ -18,20 +19,30 @@ import (
 //go:embed api/generated/openapi/master/master.swagger.json
 var swaggerJSON []byte
 
-type Service struct {
+type Service interface {
+	Start(httpAddr, grpcAddr string) error
+	Shutdown() error
+}
+
+type serviceImpl struct {
+	Service
+
 	grpcServer *grpc.Server
 	ginEngine  *gin.Engine
 	logger     *zap.Logger
 }
 
-func NewService(logger *zap.Logger) *Service {
+func NewService(
+	cfg *configs.ServiceConfig,
+	logger *zap.Logger,
+) Service {
 	gin.SetMode(gin.ReleaseMode)
 
 	grpcServer := grpc.NewServer()
 	masterService := presentation.NewMasterService(logger)
 	pb.RegisterMasterServiceServer(grpcServer, masterService)
 
-	s := &Service{
+	s := &serviceImpl{
 		grpcServer: grpcServer,
 		ginEngine:  gin.New(),
 		logger:     logger,
@@ -40,7 +51,7 @@ func NewService(logger *zap.Logger) *Service {
 	return s
 }
 
-func (s *Service) Start(httpAddr, grpcAddr string) error {
+func (s *serviceImpl) Start(httpAddr, grpcAddr string) error {
 	ctx := context.Background()
 
 	go func() {
@@ -79,7 +90,7 @@ func (s *Service) Start(httpAddr, grpcAddr string) error {
 	return s.ginEngine.Run(httpAddr)
 }
 
-func (s *Service) Shutdown() error {
+func (s *serviceImpl) Shutdown() error {
 	s.logger.Info("shutting down servers")
 	s.grpcServer.GracefulStop()
 	return nil

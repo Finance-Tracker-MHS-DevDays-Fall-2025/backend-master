@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"backend-master/configs"
 	"backend-master/internal"
 	"backend-master/internal/logger"
 
@@ -15,13 +16,18 @@ import (
 )
 
 func main() {
+	cfg, err := configs.New()
+	if err != nil {
+		panic(err)
+	}
+
 	logger, err := logger.NewLogger()
 	if err != nil {
 		panic(err)
 	}
 	defer logger.Sync()
 
-	service := internal.NewService(logger)
+	service := internal.NewService(cfg, logger)
 
 	go func() {
 		err := service.Start(":8080", ":9090")

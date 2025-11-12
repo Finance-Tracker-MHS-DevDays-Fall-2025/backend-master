@@ -12,6 +12,7 @@ import (
 	"backend-master/internal/presentation/docs"
 	"context"
 	_ "embed"
+	"fmt"
 	"net"
 
 	"github.com/gin-gonic/gin"
@@ -82,16 +83,24 @@ func NewService(
 func (s *serviceImpl) Start() error {
 	ctx := context.Background()
 
-	grpcPort := s.cfg.ServerCfg.GrpcPort
-	httpPort := s.cfg.ServerCfg.HttpPort
+	grpcAddr := fmt.Sprintf(
+		"%s:%d",
+		s.cfg.ServerCfg.ServerHost,
+		s.cfg.ServerCfg.GrpcPort,
+	)
+	httpAddr := fmt.Sprintf(
+		"%s:%d",
+		s.cfg.ServerCfg.ServerHost,
+		s.cfg.ServerCfg.HttpPort,
+	)
 
 	go func() {
-		lis, err := net.Listen("tcp", s.cfg.ServerCfg.GrpcPort)
+		lis, err := net.Listen("tcp", grpcAddr)
 		if err != nil {
 			s.logger.Fatal("failed to listen gRPC", zap.Error(err))
 		}
 
-		s.logger.Info("starting gRPC server", zap.String("addr", grpcPort))
+		s.logger.Info("starting gRPC server", zap.String("addr", grpcAddr))
 
 		if err := s.grpcServer.Serve(lis); err != nil {
 			s.logger.Fatal("gRPC server failed", zap.Error(err))
@@ -106,7 +115,7 @@ func (s *serviceImpl) Start() error {
 	err := pb.RegisterMasterServiceHandlerFromEndpoint(
 		ctx,
 		grpcMux,
-		grpcPort,
+		grpcAddr,
 		opts,
 	)
 	if err != nil {
@@ -121,9 +130,9 @@ func (s *serviceImpl) Start() error {
 	apiV1Router := apiRouter.Group("/v1")
 	apiV1Router.Any("/*path", gin.WrapH(grpcMux))
 
-	s.logger.Info("starting HTTP server", zap.String("addr", httpPort))
+	s.logger.Info("starting HTTP server", zap.String("addr", httpAddr))
 
-	return s.ginEngine.Run(httpPort)
+	return s.ginEngine.Run(httpAddr)
 }
 
 func (s *serviceImpl) Shutdown() error {

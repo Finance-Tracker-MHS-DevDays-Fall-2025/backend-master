@@ -2,6 +2,9 @@ package internal
 
 import (
 	"backend-master/internal/logger"
+	"backend-master/internal/presentation"
+	"backend-master/internal/presentation/docs"
+	"backend-master/internal/presentation/ping"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -28,7 +31,14 @@ func NewService(zap *zap.Logger) *Service {
 		logger: zap,
 	}
 
-	s.registerRoutes()
+	presentation.RegisterHandlers(e, s)
+
+	swaggerData, err := presentation.GetSwagger()
+	if err != nil {
+		panic(err)
+	}
+
+	e.GET("/swagger", docs.NewSwaggerRouter(swaggerData))
 
 	return s
 }
@@ -43,12 +53,8 @@ func (s *Service) Shutdown() error {
 	return s.echo.Close()
 }
 
-func (s *Service) registerRoutes() {
-	s.echo.GET("/ping", s.handlePing)
-}
-
-func (s *Service) handlePing(c echo.Context) error {
-	return c.JSON(http.StatusOK, map[string]string{
-		"ping": "pong",
+func (s *Service) GetPing(c echo.Context) error {
+	return c.JSON(http.StatusOK, ping.Pong{
+		Ping: "pong",
 	})
 }

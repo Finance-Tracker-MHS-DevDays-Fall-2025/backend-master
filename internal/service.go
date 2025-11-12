@@ -3,6 +3,11 @@ package internal
 import (
 	"backend-master/configs"
 	pb "backend-master/internal/api-gen/proto/master"
+	"backend-master/internal/data/database"
+	analRepo "backend-master/internal/data/repositories/analyzer"
+	walletRepo "backend-master/internal/data/repositories/wallet"
+	analyzerController "backend-master/internal/domain/controllers/analyzer"
+	walletController "backend-master/internal/domain/controllers/wallet"
 	"backend-master/internal/presentation"
 	"backend-master/internal/presentation/docs"
 	"context"
@@ -39,8 +44,29 @@ func NewService(
 ) Service {
 	gin.SetMode(gin.ReleaseMode)
 
+	dbManager, err := database.NewManager(cfg.DatabaseCfg, logger)
+	if err != nil {
+		logger.Fatal("failed to initialize database", zap.Error(err))
+	}
+
+	walletRepository := walletRepo.NewRepository(dbManager, logger)
+	analyzerRepository := analRepo.NewRepository(dbManager, logger)
+
+	walletClient, err := walletRepo.NewClient(cfg.SlavesCfg.WalletUrl, logger)
+	if err != nil {
+		logger.Fatal("failed to initialize wallet client", zap.Error(err))
+	}
+
+	analyzerClient, err := analRepo.NewClient(cfg.SlavesCfg.AnalyzerUrl, logger)
+	if err != nil {
+		logger.Fatal("failed to initialize analyzer client", zap.Error(err))
+	}
+
+	walletCtrl := walletController.NewController(walletRepository, walletClient, logger)
+	analyzerCtrl := analyzerController.NewController(analyzerRepository, analyzerClient, logger)
+
 	grpcServer := grpc.NewServer()
-	masterService := presentation.NewMasterService(logger)
+	masterService := presentation.NewMasterService(logger, walletCtrl, analyzerCtrl)
 	pb.RegisterMasterServiceServer(grpcServer, masterService)
 
 	s := &serviceImpl{

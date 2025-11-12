@@ -32,13 +32,11 @@ const (
 )
 
 func NewSwaggerHandler(swaggerJSON []byte) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Data(
+	return func(ctx *gin.Context) {
+		ctx.Data(
 			http.StatusOK,
 			"text/html; charset=utf-8",
-			[]byte(
-				fmt.Sprintf(html, swaggerJSON),
-			),
+            fmt.Appendf(nil, html, swaggerJSON),
 		)
 	}
 }

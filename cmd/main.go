@@ -24,7 +24,7 @@ func main() {
 	service := internal.NewService(logger)
 
 	go func() {
-		err := service.Start(":8080")
+		err := service.Start(":8080", ":9090")
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Fatal("failed to start service", zap.Error(err))
 		}

@@ -1,8 +1,0 @@
-# yaml-language-server: $schema=../../.vscode/configuration-schema.json
-package: presentation
-output: server.gen.go
-additional-imports:
-  - package: ping/models
-generate:
-  echo-server: true
-  embedded-spec: true

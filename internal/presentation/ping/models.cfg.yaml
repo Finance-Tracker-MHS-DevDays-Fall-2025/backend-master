@@ -1,5 +1,0 @@
-# yaml-language-server: $schema=../../../.vscode/configuration-schema.json
-package: ping
-generate:
-  models: true
-output: ./models.gen.go

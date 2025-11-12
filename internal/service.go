@@ -1,60 +1,86 @@
 package internal
 
 import (
-	"backend-master/internal/logger"
+	pb "backend-master/internal/api/generated/proto/master"
 	"backend-master/internal/presentation"
 	"backend-master/internal/presentation/docs"
-	"backend-master/internal/presentation/ping"
-	"net/http"
+	"context"
+	_ "embed"
+	"net"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/gin-gonic/gin"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
+//go:embed api/generated/openapi/master/master.swagger.json
+var swaggerJSON []byte
+
 type Service struct {
-	echo   *echo.Echo
-	logger *zap.Logger
+	grpcServer *grpc.Server
+	ginEngine  *gin.Engine
+	logger     *zap.Logger
 }
 
-func NewService(zap *zap.Logger) *Service {
-	e := echo.New()
-	e.HideBanner = true
-	e.HidePort = true
+func NewService(logger *zap.Logger) *Service {
+	gin.SetMode(gin.ReleaseMode)
 
-	e.Use(middleware.Recover())
-	e.Use(middleware.RequestID())
-	e.Use(logger.NewLoggerMiddleware(zap))
+	grpcServer := grpc.NewServer()
+	masterService := presentation.NewMasterService(logger)
+	pb.RegisterMasterServiceServer(grpcServer, masterService)
 
 	s := &Service{
-		echo:   e,
-		logger: zap,
+		grpcServer: grpcServer,
+		ginEngine:  gin.New(),
+		logger:     logger,
 	}
-
-	presentation.RegisterHandlers(e, s)
-
-	swaggerData, err := presentation.GetSwagger()
-	if err != nil {
-		panic(err)
-	}
-
-	e.GET("/swagger", docs.NewSwaggerRouter(swaggerData))
 
 	return s
 }
 
-func (s *Service) Start(addr string) error {
-	s.logger.Info("starting server", zap.String("addr", addr))
-	return s.echo.Start(addr)
+func (s *Service) Start(httpAddr, grpcAddr string) error {
+	ctx := context.Background()
+
+	go func() {
+		lis, err := net.Listen("tcp", grpcAddr)
+		if err != nil {
+			s.logger.Fatal("failed to listen gRPC", zap.Error(err))
+		}
+
+		s.logger.Info("starting gRPC server", zap.String("addr", grpcAddr))
+
+		if err := s.grpcServer.Serve(lis); err != nil {
+			s.logger.Fatal("gRPC server failed", zap.Error(err))
+		}
+	}()
+
+	grpcMux := runtime.NewServeMux()
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+
+	err := pb.RegisterMasterServiceHandlerFromEndpoint(ctx, grpcMux, grpcAddr, opts)
+	if err != nil {
+		s.logger.Fatal("failed to register gateway", zap.Error(err))
+	}
+
+	s.ginEngine.Use(gin.Recovery())
+
+	apiRouter := s.ginEngine.Group("/api")
+	apiRouter.GET("/docs", docs.NewSwaggerHandler(swaggerJSON))
+
+	apiV1Router := apiRouter.Group("/v1")
+	apiV1Router.Any("/*path", gin.WrapH(grpcMux))
+
+	s.logger.Info("starting HTTP server", zap.String("addr", httpAddr))
+
+	return s.ginEngine.Run(httpAddr)
 }
 
 func (s *Service) Shutdown() error {
-	s.logger.Info("shutting down server")
-	return s.echo.Close()
-}
-
-func (s *Service) GetPing(c echo.Context) error {
-	return c.JSON(http.StatusOK, ping.Pong{
-		Ping: "pong",
-	})
+	s.logger.Info("shutting down servers")
+	s.grpcServer.GracefulStop()
+	return nil
 }

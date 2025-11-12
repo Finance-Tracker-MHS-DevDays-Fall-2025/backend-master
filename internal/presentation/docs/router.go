@@ -4,25 +4,25 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 )
 
-const(
+const (
 	html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Swagger UI</title>
+    <title>API Documentation</title>
     <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
 </head>
 <body>
     <div id="swagger-ui"></div>
     <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
     <script>
+        const spec = %s;
         window.onload = function() {
             SwaggerUIBundle({
-                spec: %s,
+                spec: spec,
                 dom_id: '#swagger-ui',
             })
         }
@@ -31,16 +31,14 @@ const(
 </html>`
 )
 
-func NewSwaggerRouter(swagger *openapi3.T) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		specJSON, err := swagger.MarshalJSON()
-		if err != nil {
-			return err
-		}
-
-		return c.HTML(
-			http.StatusOK, 
-			fmt.Sprintf(html, specJSON),
+func NewSwaggerHandler(swaggerJSON []byte) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Data(
+			http.StatusOK,
+			"text/html; charset=utf-8",
+			[]byte(
+				fmt.Sprintf(html, swaggerJSON),
+			),
 		)
 	}
 }

@@ -1,4 +1,8 @@
 
+.PHONY: env
+env:
+	cp .env.example .env
+
 .PHONY: sync-submodules
 sync-submodules:
 	git submodule update --init --recursive --remote --merge

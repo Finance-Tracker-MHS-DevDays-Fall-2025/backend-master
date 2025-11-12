@@ -13,8 +13,8 @@ type ServiceConfig struct {
 }
 
 type ServerConfig struct {
-	Host string `env:"SERVER_HOST" env-required:"true"`
-	Port int    `env:"SERVER_PORT" env-required:"true"`
+	GrpcPort string `env:"GRPC_PORT" env-required:"true"`
+	HttpPort string `env:"HTTP_PORT" env-required:"true"`
 }
 
 type DatabaseConfig struct {

@@ -3,7 +3,7 @@ package presentation
 import (
 	"context"
 
-	pb "backend-master/internal/api/generated/proto/master"
+	pb "backend-master/internal/api-gen/proto/master"
 
 	"go.uber.org/zap"
 )

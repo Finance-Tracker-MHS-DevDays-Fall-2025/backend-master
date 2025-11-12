@@ -7,7 +7,7 @@
 package analyzer
 
 import (
-	common "backend-master/internal/api/generated/proto/common"
+	common "backend-master/internal/api-gen/proto/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -519,8 +519,8 @@ const file_analyzer_analyzer_proto_rawDesc = "" +
 	"\tforecasts\x18\x01 \x03(\v2\x12.analyzer.ForecastR\tforecasts2\xaf\x01\n" +
 	"\x0fAnalyzerService\x12P\n" +
 	"\rGetStatistics\x12\x1e.analyzer.GetStatisticsRequest\x1a\x1f.analyzer.GetStatisticsResponse\x12J\n" +
-	"\vGetForecast\x12\x1c.analyzer.GetForecastRequest\x1a\x1d.analyzer.GetForecastResponseB\x93\x01\n" +
-	"\fcom.analyzerB\rAnalyzerProtoP\x01Z4backend-master/internal/api/generated/proto/analyzer\xa2\x02\x03AXX\xaa\x02\bAnalyzer\xca\x02\bAnalyzer\xe2\x02\x14Analyzer\\GPBMetadata\xea\x02\bAnalyzerb\x06proto3"
+	"\vGetForecast\x12\x1c.analyzer.GetForecastRequest\x1a\x1d.analyzer.GetForecastResponseB\x8d\x01\n" +
+	"\fcom.analyzerB\rAnalyzerProtoP\x01Z.backend-master/internal/api-gen/proto/analyzer\xa2\x02\x03AXX\xaa\x02\bAnalyzer\xca\x02\bAnalyzer\xe2\x02\x14Analyzer\\GPBMetadata\xea\x02\bAnalyzerb\x06proto3"
 
 var (
 	file_analyzer_analyzer_proto_rawDescOnce sync.Once

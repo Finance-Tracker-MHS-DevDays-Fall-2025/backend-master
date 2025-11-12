@@ -2,7 +2,7 @@ package internal
 
 import (
 	"backend-master/configs"
-	pb "backend-master/internal/api/generated/proto/master"
+	pb "backend-master/internal/api-gen/proto/master"
 	"backend-master/internal/presentation"
 	"backend-master/internal/presentation/docs"
 	"context"
@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-//go:embed api/generated/openapi/master/master.swagger.json
+//go:embed api-gen/openapi/master/master.swagger.json
 var swaggerJSON []byte
 
 type Service interface {

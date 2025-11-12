@@ -314,9 +314,9 @@ const file_common_common_proto_rawDesc = "" +
 	"\x17TIME_PERIOD_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11TIME_PERIOD_MONTH\x10\x01\x12\x17\n" +
 	"\x13TIME_PERIOD_QUARTER\x10\x02\x12\x14\n" +
-	"\x10TIME_PERIOD_YEAR\x10\x03B\x85\x01\n" +
+	"\x10TIME_PERIOD_YEAR\x10\x03B\x7f\n" +
 	"\n" +
-	"com.commonB\vCommonProtoP\x01Z2backend-master/internal/api/generated/proto/common\xa2\x02\x03CXX\xaa\x02\x06Common\xca\x02\x06Common\xe2\x02\x12Common\\GPBMetadata\xea\x02\x06Commonb\x06proto3"
+	"com.commonB\vCommonProtoP\x01Z,backend-master/internal/api-gen/proto/common\xa2\x02\x03CXX\xaa\x02\x06Common\xca\x02\x06Common\xe2\x02\x12Common\\GPBMetadata\xea\x02\x06Commonb\x06proto3"
 
 var (
 	file_common_common_proto_rawDescOnce sync.Once

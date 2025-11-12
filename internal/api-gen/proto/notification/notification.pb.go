@@ -129,8 +129,8 @@ const file_notification_notification_proto_rawDesc = "" +
 	"\amessage\x18\x03 \x01(\tR\amessage\"\x1a\n" +
 	"\x18SendNotificationResponse2x\n" +
 	"\x13NotificationService\x12a\n" +
-	"\x10SendNotification\x12%.notification.SendNotificationRequest\x1a&.notification.SendNotificationResponseB\xaf\x01\n" +
-	"\x10com.notificationB\x11NotificationProtoP\x01Z8backend-master/internal/api/generated/proto/notification\xa2\x02\x03NXX\xaa\x02\fNotification\xca\x02\fNotification\xe2\x02\x18Notification\\GPBMetadata\xea\x02\fNotificationb\x06proto3"
+	"\x10SendNotification\x12%.notification.SendNotificationRequest\x1a&.notification.SendNotificationResponseB\xa9\x01\n" +
+	"\x10com.notificationB\x11NotificationProtoP\x01Z2backend-master/internal/api-gen/proto/notification\xa2\x02\x03NXX\xaa\x02\fNotification\xca\x02\fNotification\xe2\x02\x18Notification\\GPBMetadata\xea\x02\fNotificationb\x06proto3"
 
 var (
 	file_notification_notification_proto_rawDescOnce sync.Once

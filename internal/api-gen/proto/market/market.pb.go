@@ -7,7 +7,7 @@
 package market
 
 import (
-	common "backend-master/internal/api/generated/proto/common"
+	common "backend-master/internal/api-gen/proto/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -650,9 +650,9 @@ const file_market_market_proto_rawDesc = "" +
 	"\x16GetInvestmentPositions\x12%.market.GetInvestmentPositionsRequest\x1a&.market.GetInvestmentPositionsResponse\x12F\n" +
 	"\vGetSecurity\x12\x1a.market.GetSecurityRequest\x1a\x1b.market.GetSecurityResponse\x12^\n" +
 	"\x13GetSecuritiesPrices\x12\".market.GetSecuritiesPricesRequest\x1a#.market.GetSecuritiesPricesResponse\x12b\n" +
-	"\x13GetSecurityPayments\x12$.market.GetSecuritiesPaymentsRequest\x1a%.market.GetSecuritiesPaymentsResponseB\x85\x01\n" +
+	"\x13GetSecurityPayments\x12$.market.GetSecuritiesPaymentsRequest\x1a%.market.GetSecuritiesPaymentsResponseB\x7f\n" +
 	"\n" +
-	"com.marketB\vMarketProtoP\x01Z2backend-master/internal/api/generated/proto/market\xa2\x02\x03MXX\xaa\x02\x06Market\xca\x02\x06Market\xe2\x02\x12Market\\GPBMetadata\xea\x02\x06Marketb\x06proto3"
+	"com.marketB\vMarketProtoP\x01Z,backend-master/internal/api-gen/proto/market\xa2\x02\x03MXX\xaa\x02\x06Market\xca\x02\x06Market\xe2\x02\x12Market\\GPBMetadata\xea\x02\x06Marketb\x06proto3"
 
 var (
 	file_market_market_proto_rawDescOnce sync.Once

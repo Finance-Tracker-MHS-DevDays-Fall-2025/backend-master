@@ -1,0 +1,4 @@
+[submodule "internal/api"]
+	path = internal/api
+	url = https://github.com/Finance-Tracker-MHS-DevDays-Fall-2025/backend-common.git
+	branch = main

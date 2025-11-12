@@ -7,7 +7,7 @@
 package wallet
 
 import (
-	common "backend-master/internal/api/generated/proto/common"
+	common "backend-master/internal/api-gen/proto/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -463,9 +463,9 @@ const file_wallet_wallet_proto_rawDesc = "" +
 	"\ftransactions\x18\x01 \x03(\v2\x13.wallet.TransactionR\ftransactions2\xab\x01\n" +
 	"\rWalletService\x12F\n" +
 	"\vGetAccounts\x12\x1a.wallet.GetAccountsRequest\x1a\x1b.wallet.GetAccountsResponse\x12R\n" +
-	"\x0fGetTransactions\x12\x1e.wallet.GetTransactionsRequest\x1a\x1f.wallet.GetTransactionsResponseB\x85\x01\n" +
+	"\x0fGetTransactions\x12\x1e.wallet.GetTransactionsRequest\x1a\x1f.wallet.GetTransactionsResponseB\x7f\n" +
 	"\n" +
-	"com.walletB\vWalletProtoP\x01Z2backend-master/internal/api/generated/proto/wallet\xa2\x02\x03WXX\xaa\x02\x06Wallet\xca\x02\x06Wallet\xe2\x02\x12Wallet\\GPBMetadata\xea\x02\x06Walletb\x06proto3"
+	"com.walletB\vWalletProtoP\x01Z,backend-master/internal/api-gen/proto/wallet\xa2\x02\x03WXX\xaa\x02\x06Wallet\xca\x02\x06Wallet\xe2\x02\x12Wallet\\GPBMetadata\xea\x02\x06Walletb\x06proto3"
 
 var (
 	file_wallet_wallet_proto_rawDescOnce sync.Once

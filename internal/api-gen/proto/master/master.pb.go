@@ -7,9 +7,9 @@
 package master
 
 import (
-	analyzer "backend-master/internal/api/generated/proto/analyzer"
-	common "backend-master/internal/api/generated/proto/common"
-	wallet "backend-master/internal/api/generated/proto/wallet"
+	analyzer "backend-master/internal/api-gen/proto/analyzer"
+	common "backend-master/internal/api-gen/proto/common"
+	wallet "backend-master/internal/api-gen/proto/wallet"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -516,9 +516,9 @@ const file_master_master_proto_rawDesc = "" +
 	"\n" +
 	"GetBalance\x12\x19.master.GetBalanceRequest\x1a\x1a.master.GetBalanceResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/users/{user_id}/balance\x12c\n" +
 	"\fGetAnalytics\x12\x1b.master.GetAnalyticsRequest\x1a\x1c.master.GetAnalyticsResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/v1/analytics\x12_\n" +
-	"\vGetForecast\x12\x1a.master.GetForecastRequest\x1a\x1b.master.GetForecastResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/forecastB\x85\x01\n" +
+	"\vGetForecast\x12\x1a.master.GetForecastRequest\x1a\x1b.master.GetForecastResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/forecastB\x7f\n" +
 	"\n" +
-	"com.masterB\vMasterProtoP\x01Z2backend-master/internal/api/generated/proto/master\xa2\x02\x03MXX\xaa\x02\x06Master\xca\x02\x06Master\xe2\x02\x12Master\\GPBMetadata\xea\x02\x06Masterb\x06proto3"
+	"com.masterB\vMasterProtoP\x01Z,backend-master/internal/api-gen/proto/master\xa2\x02\x03MXX\xaa\x02\x06Master\xca\x02\x06Master\xe2\x02\x12Master\\GPBMetadata\xea\x02\x06Masterb\x06proto3"
 
 var (
 	file_master_master_proto_rawDescOnce sync.Once

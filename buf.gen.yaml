@@ -5,19 +5,19 @@ managed:
     - module: buf.build/googleapis/googleapis
   override:
     - file_option: go_package_prefix
-      value: backend-master/internal/api/generated/proto
+      value: backend-master/internal/api-gen/proto
 plugins:
   - remote: buf.build/protocolbuffers/go
-    out: internal/api/generated/proto
+    out: internal/api-gen/proto
     opt:
       - paths=source_relative
   - remote: buf.build/grpc/go
-    out: internal/api/generated/proto
+    out: internal/api-gen/proto
     opt:
       - paths=source_relative
   - remote: buf.build/grpc-ecosystem/gateway
-    out: internal/api/generated/proto
+    out: internal/api-gen/proto
     opt:
       - paths=source_relative
   - remote: buf.build/grpc-ecosystem/openapiv2
-    out: internal/api/generated/openapi
+    out: internal/api-gen/openapi

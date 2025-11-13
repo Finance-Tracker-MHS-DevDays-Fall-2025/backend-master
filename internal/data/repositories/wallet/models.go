@@ -2,6 +2,7 @@ package wallet
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"backend-master/internal/api-gen/proto/common"
@@ -16,7 +17,7 @@ type Account struct {
 	UserID    uuid.UUID `db:"user_id"`
 	Name      string    `db:"name"`
 	Type      string    `db:"type"`
-	Balance   int64     `db:"balance"` // копейки
+	Balance   int64     `db:"balance"` // копейки, сущие копейки
 	Currency  string    `db:"currency"`
 	CreatedAt time.Time `db:"created_at"`
 }
@@ -26,7 +27,7 @@ type Transaction struct {
 	AccountID   uuid.UUID      `db:"account_id"`
 	ToAccountID sql.NullString `db:"to_account_id"`
 	Type        string         `db:"type"`
-	Amount      int64          `db:"amount"` // копейки
+	Amount      int64          `db:"amount"` // копейки, сущие копейки
 	Currency    string         `db:"currency"`
 	MCC         sql.NullInt32  `db:"mcc"`
 	Description sql.NullString `db:"description"`
@@ -55,10 +56,21 @@ func (tx *Transaction) ToProto() *pb.Transaction {
 		Currency: tx.Currency,
 	}
 
-	return &pb.Transaction{
-		AccountId: tx.AccountID.String(),
-		Type:      common.TransactionType(common.TransactionType_value[tx.Type]),
-		Amount:    money,
-		Date:      timestamppb.New(tx.CreatedAt),
+	pbTx := &pb.Transaction{
+		AccountId:     tx.AccountID.String(),
+		Type:          common.TransactionType(common.TransactionType_value[tx.Type]),
+		Amount:        money,
+		FromAccountId: tx.AccountID.String(),
+		ToAccountId:   tx.AccountID.String(),
+		Date:          timestamppb.New(tx.CreatedAt),
 	}
+
+	if tx.MCC.Valid {
+		pbTx.Category = fmt.Sprintf("%d", tx.MCC.Int32)
+	}
+	if tx.Description.Valid {
+		pbTx.Description = tx.Description.String
+	}
+
+	return pbTx
 }

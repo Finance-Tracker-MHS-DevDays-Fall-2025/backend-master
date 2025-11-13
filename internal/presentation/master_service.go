@@ -32,8 +32,26 @@ func NewMasterService(
 
 func (s *masterServiceImpl) CreateTransaction(ctx context.Context, req *pb.CreateTransactionRequest) (*pb.CreateTransactionResponse, error) {
 	s.logger.Info("CreateTransaction", zap.String("user_id", req.UserId))
-	// TODO: implement transaction creation
-	return &pb.CreateTransactionResponse{}, nil
+
+	tx, err := s.walletController.CreateTransaction(
+		ctx,
+		req.FromAccountId,
+		req.ToAccountId,
+		req.Type,
+		req.Amount.Amount,
+		req.Amount.Currency,
+		req.CategoryId, // mcc
+		req.Description,
+		req.Date.AsTime(),
+	)
+	if err != nil {
+		s.logger.Error("failed to create transaction", zap.Error(err))
+		return nil, err
+	}
+
+	return &pb.CreateTransactionResponse{
+		Transaction: tx,
+	}, nil
 }
 
 func (s *masterServiceImpl) GetBalance(ctx context.Context, req *pb.GetBalanceRequest) (*pb.GetBalanceResponse, error) {

@@ -20,6 +20,17 @@ type WalletRepository interface {
 		accountID uuid.UUID,
 		limit int,
 	) ([]Transaction, error)
+
+	CreateTransaction(
+		ctx context.Context,
+		tx *Transaction,
+	) (*Transaction, error)
+
+	UpdateAccountBalance(
+		ctx context.Context,
+		accountID uuid.UUID,
+		amount int64,
+	) error
 }
 
 type walletRepositoryImpl struct {
@@ -104,4 +115,76 @@ func (repo *walletRepositoryImpl) GetTransactionsByAccountID(
 	}
 
 	return transactions, nil
+}
+
+func (repo *walletRepositoryImpl) CreateTransaction(
+	ctx context.Context,
+	tx *Transaction,
+) (*Transaction, error) {
+	query := `
+		INSERT INTO transactions (
+			id,
+			account_id,
+			to_account_id,
+			type,
+			amount,
+			currency,
+			mcc,
+			description,
+			created_at
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		RETURNING id, account_id, to_account_id, type, amount, currency, mcc, description, created_at
+	`
+
+	tx.ID = uuid.New()
+
+	err := repo.db.GetDB().GetContext(
+		ctx,
+		tx,
+		query,
+		tx.ID,
+		tx.AccountID,
+		tx.ToAccountID,
+		tx.Type,
+		tx.Amount,
+		tx.Currency,
+		tx.MCC,
+		tx.Description,
+		tx.CreatedAt,
+	)
+	if err != nil {
+		repo.logger.Error(
+			"failed to create transaction",
+			zap.Error(err),
+			zap.String("account_id", tx.AccountID.String()),
+		)
+		return nil, fmt.Errorf("failed to create transaction: %w", err)
+	}
+
+	return tx, nil
+}
+
+func (repo *walletRepositoryImpl) UpdateAccountBalance(
+	ctx context.Context,
+	accountID uuid.UUID,
+	amount int64,
+) error {
+	query := `
+		UPDATE accounts
+		SET balance = balance + $1
+		WHERE id = $2
+	`
+
+	_, err := repo.db.GetDB().ExecContext(ctx, query, amount, accountID)
+	if err != nil {
+		repo.logger.Error(
+			"failed to update account balance",
+			zap.Error(err),
+			zap.String("account_id", accountID.String()),
+			zap.Int64("amount", amount),
+		)
+		return fmt.Errorf("failed to update account balance: %w", err)
+	}
+
+	return nil
 }

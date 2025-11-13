@@ -7,6 +7,7 @@ import (
 	"backend-master/internal/api-gen/proto/common"
 	pb "backend-master/internal/api-gen/proto/master"
 	anal "backend-master/internal/domain/controllers/analyzer"
+	"backend-master/internal/domain/controllers/market"
 	"backend-master/internal/domain/controllers/wallet"
 
 	"go.uber.org/zap"
@@ -14,27 +15,30 @@ import (
 
 type masterServiceImpl struct {
 	pb.UnimplementedMasterServiceServer
-	logger             *zap.Logger
-	walletController   wallet.WalletController
-	analyzerController anal.AnalyzerController
+	logger       *zap.Logger
+	walletCtrl   wallet.WalletController
+	marketCtrl   market.MarketController
+	analyzerCtrl anal.AnalyzerController
 }
 
 func NewMasterService(
 	logger *zap.Logger,
 	walletCtrl wallet.WalletController,
+	marketCtrl market.MarketController,
 	analyzerCtrl anal.AnalyzerController,
 ) pb.MasterServiceServer {
 	return &masterServiceImpl{
-		logger:             logger,
-		walletController:   walletCtrl,
-		analyzerController: analyzerCtrl,
+		logger:       logger,
+		walletCtrl:   walletCtrl,
+		marketCtrl:   marketCtrl,
+		analyzerCtrl: analyzerCtrl,
 	}
 }
 
 func (s *masterServiceImpl) CreateTransaction(ctx context.Context, req *pb.CreateTransactionRequest) (*pb.CreateTransactionResponse, error) {
 	s.logger.Info("CreateTransaction", zap.String("body", fmt.Sprintf("%v", req)))
 
-	tx, err := s.walletController.CreateTransaction(
+	tx, err := s.walletCtrl.CreateTransaction(
 		ctx,
 		req.FromAccountId,
 		req.ToAccountId,
@@ -58,7 +62,7 @@ func (s *masterServiceImpl) CreateTransaction(ctx context.Context, req *pb.Creat
 func (s *masterServiceImpl) GetBalance(ctx context.Context, req *pb.GetBalanceRequest) (*pb.GetBalanceResponse, error) {
 	s.logger.Info("GetBalance", zap.String("body", fmt.Sprintf("%v", req)))
 
-	accountsResp, err := s.walletController.GetUserAccounts(ctx, req.UserId)
+	accountsResp, err := s.walletCtrl.GetUserAccounts(ctx, req.UserId)
 	if err != nil {
 		s.logger.Error("failed to get user accounts", zap.Error(err))
 		return nil, err
@@ -83,7 +87,7 @@ func (s *masterServiceImpl) GetBalance(ctx context.Context, req *pb.GetBalanceRe
 func (s *masterServiceImpl) GetAnalytics(ctx context.Context, req *pb.GetAnalyticsRequest) (*pb.GetAnalyticsResponse, error) {
 	s.logger.Info("GetAnalytics", zap.String("body", fmt.Sprintf("%v", req)))
 
-	stats, err := s.analyzerController.GetStatistics(
+	stats, err := s.analyzerCtrl.GetStatistics(
 		ctx,
 		req.UserId,
 		req.StartDate.AsTime(),
@@ -103,7 +107,7 @@ func (s *masterServiceImpl) GetAnalytics(ctx context.Context, req *pb.GetAnalyti
 func (s *masterServiceImpl) GetForecast(ctx context.Context, req *pb.GetForecastRequest) (*pb.GetForecastResponse, error) {
 	s.logger.Info("GetForecast", zap.String("body", fmt.Sprintf("%v", req)))
 
-	forecast, err := s.analyzerController.GetForecast(
+	forecast, err := s.analyzerCtrl.GetForecast(
 		ctx,
 		req.UserId,
 		req.Period,

@@ -37,18 +37,15 @@ type MarketController interface {
 }
 
 type marketControllerImpl struct {
-	repo   market.MarketRepository
 	client *market.MarketClient
 	logger *zap.Logger
 }
 
 func NewController(
-	repo market.MarketRepository,
 	client *market.MarketClient,
 	logger *zap.Logger,
 ) MarketController {
 	return &marketControllerImpl{
-		repo:   repo,
 		client: client,
 		logger: logger,
 	}
@@ -86,7 +83,10 @@ func (cont *marketControllerImpl) GetSecurity(
 	ctx context.Context,
 	figi string,
 ) (*pb.GetSecurityResponse, error) {
-	security, err := cont.client.GetSecurity(ctx, &pb.GetSecurityRequest{Figi: figi})
+	security, err := cont.client.GetSecurity(
+		ctx,
+		&pb.GetSecurityRequest{Figi: figi},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get security from client: %w", err)
 	}
@@ -97,7 +97,10 @@ func (cont *marketControllerImpl) GetSecuritiesPrices(
 	ctx context.Context,
 	figis []string,
 ) (*pb.GetSecuritiesPricesResponse, error) {
-	securities, err := cont.client.GetSecuritiesPrices(ctx, &pb.GetSecuritiesPricesRequest{Figis: figis})
+	securities, err := cont.client.GetSecuritiesPrices(
+		ctx,
+		&pb.GetSecuritiesPricesRequest{Figis: figis},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get securities from client: %w", err)
 	}
@@ -108,11 +111,14 @@ func (cont *marketControllerImpl) GetSecurityPayments(
 	ctx context.Context,
 	figi string,
 ) (*pb.GetSecuritiesPaymentsResponse, error) {
-	payments, err := cont.client.GetSecurityPayments(ctx, &pb.GetSecuritiesPaymentsRequest{
-		Figis:     []string{figi},
-		StartDate: timestamppb.New(time.Now().AddDate(0, -6, 0)),
-		EndDate:   timestamppb.New(time.Now().AddDate(0, 6, 0)),
-	})
+	payments, err := cont.client.GetSecurityPayments(
+		ctx,
+		&pb.GetSecuritiesPaymentsRequest{
+			Figis:     []string{figi},
+			StartDate: timestamppb.New(time.Now().AddDate(0, -6, 0)),
+			EndDate:   timestamppb.New(time.Now().AddDate(0, 6, 0)),
+		},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get securities from client: %w", err)
 	}

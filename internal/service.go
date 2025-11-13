@@ -5,8 +5,10 @@ import (
 	pb "backend-master/internal/api-gen/proto/master"
 	"backend-master/internal/data/database"
 	analRepo "backend-master/internal/data/repositories/analyzer"
+	marketRepo "backend-master/internal/data/repositories/market"
 	walletRepo "backend-master/internal/data/repositories/wallet"
 	analyzerController "backend-master/internal/domain/controllers/analyzer"
+	marketController "backend-master/internal/domain/controllers/market"
 	walletController "backend-master/internal/domain/controllers/wallet"
 	"backend-master/internal/presentation"
 	"backend-master/internal/presentation/docs"
@@ -68,6 +70,15 @@ func NewService(
 		logger.Fatal("failed to initialize wallet client", zap.Error(err))
 	}
 
+	marketClient, err := marketRepo.NewClient(
+		cfg.SlavesCfg.MarketUrl,
+		logger,
+		opts...,
+	)
+	if err != nil {
+		logger.Fatal("failed to initialize market client", zap.Error(err))
+	}
+
 	analyzerClient, err := analRepo.NewClient(
 		cfg.SlavesCfg.AnalyzerUrl,
 		logger,
@@ -78,12 +89,18 @@ func NewService(
 	}
 
 	walletCtrl := walletController.NewController(walletRepository, walletClient, logger)
+	marketCtrl := marketController.NewController(marketClient, logger)
 	analyzerCtrl := analyzerController.NewController(analyzerClient, logger)
 
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(presentation.UnaryServerInterceptor(logger)),
 	)
-	masterService := presentation.NewMasterService(logger, walletCtrl, analyzerCtrl)
+	masterService := presentation.NewMasterService(
+		logger,
+		walletCtrl,
+		marketCtrl,
+		analyzerCtrl,
+	)
 	pb.RegisterMasterServiceServer(grpcServer, masterService)
 
 	s := &serviceImpl{

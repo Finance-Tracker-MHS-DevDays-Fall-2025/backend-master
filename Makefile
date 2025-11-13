@@ -5,7 +5,7 @@ env:
 
 .PHONY: sync-submodules
 sync-submodules:
-	git submodule update --init --recursive --remote --merge
+	git submodule update --init --recursive --remote --force
 
 .PHONY: protogen
 protogen:

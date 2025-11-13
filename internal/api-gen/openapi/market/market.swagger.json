@@ -120,6 +120,9 @@
         "priceUpdatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "type": {
+          "type": "string"
         }
       }
     },

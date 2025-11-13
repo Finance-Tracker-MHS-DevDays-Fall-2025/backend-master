@@ -50,12 +50,24 @@ func (s *masterServiceImpl) CreateTransaction(ctx context.Context, req *pb.Creat
 		req.Date.AsTime(),
 	)
 	if err != nil {
-		s.logger.Error("failed to create transaction", zap.Error(err))
-		return nil, err
+		return nil, fmt.Errorf("failed to create transaction: %w", err)
 	}
 
 	return &pb.CreateTransactionResponse{
 		Transaction: tx,
+	}, nil
+}
+
+func (s *masterServiceImpl) GetTransactions(ctx context.Context, req *pb.GetTransactionsRequest) (*pb.GetTransactionsResponse, error) {
+	s.logger.Info("GetBalance", zap.String("body", fmt.Sprintf("%v", req)))
+
+	resp, err := s.walletCtrl.GetUserTransactions(ctx, req.UserId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user transactions: %w", err)
+	}
+
+	return &pb.GetTransactionsResponse{
+		Transactions: resp.Transactions,
 	}, nil
 }
 

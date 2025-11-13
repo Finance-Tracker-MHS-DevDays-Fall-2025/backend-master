@@ -170,6 +170,94 @@ func (x *CreateTransactionResponse) GetTransaction() *wallet.Transaction {
 	return nil
 }
 
+type GetTransactionsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTransactionsRequest) Reset() {
+	*x = GetTransactionsRequest{}
+	mi := &file_master_master_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTransactionsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionsRequest) ProtoMessage() {}
+
+func (x *GetTransactionsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_master_master_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionsRequest.ProtoReflect.Descriptor instead.
+func (*GetTransactionsRequest) Descriptor() ([]byte, []int) {
+	return file_master_master_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetTransactionsRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type GetTransactionsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Transactions  []*wallet.Transaction  `protobuf:"bytes,1,rep,name=transactions,proto3" json:"transactions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTransactionsResponse) Reset() {
+	*x = GetTransactionsResponse{}
+	mi := &file_master_master_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTransactionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionsResponse) ProtoMessage() {}
+
+func (x *GetTransactionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_master_master_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionsResponse.ProtoReflect.Descriptor instead.
+func (*GetTransactionsResponse) Descriptor() ([]byte, []int) {
+	return file_master_master_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetTransactionsResponse) GetTransactions() []*wallet.Transaction {
+	if x != nil {
+		return x.Transactions
+	}
+	return nil
+}
+
 type GetBalanceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -179,7 +267,7 @@ type GetBalanceRequest struct {
 
 func (x *GetBalanceRequest) Reset() {
 	*x = GetBalanceRequest{}
-	mi := &file_master_master_proto_msgTypes[2]
+	mi := &file_master_master_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -191,7 +279,7 @@ func (x *GetBalanceRequest) String() string {
 func (*GetBalanceRequest) ProtoMessage() {}
 
 func (x *GetBalanceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_master_master_proto_msgTypes[2]
+	mi := &file_master_master_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -204,7 +292,7 @@ func (x *GetBalanceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBalanceRequest.ProtoReflect.Descriptor instead.
 func (*GetBalanceRequest) Descriptor() ([]byte, []int) {
-	return file_master_master_proto_rawDescGZIP(), []int{2}
+	return file_master_master_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetBalanceRequest) GetUserId() string {
@@ -224,7 +312,7 @@ type GetBalanceResponse struct {
 
 func (x *GetBalanceResponse) Reset() {
 	*x = GetBalanceResponse{}
-	mi := &file_master_master_proto_msgTypes[3]
+	mi := &file_master_master_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -236,7 +324,7 @@ func (x *GetBalanceResponse) String() string {
 func (*GetBalanceResponse) ProtoMessage() {}
 
 func (x *GetBalanceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_master_master_proto_msgTypes[3]
+	mi := &file_master_master_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -249,7 +337,7 @@ func (x *GetBalanceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBalanceResponse.ProtoReflect.Descriptor instead.
 func (*GetBalanceResponse) Descriptor() ([]byte, []int) {
-	return file_master_master_proto_rawDescGZIP(), []int{3}
+	return file_master_master_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetBalanceResponse) GetTotalBalance() *common.Money {
@@ -277,7 +365,7 @@ type GetAnalyticsRequest struct {
 
 func (x *GetAnalyticsRequest) Reset() {
 	*x = GetAnalyticsRequest{}
-	mi := &file_master_master_proto_msgTypes[4]
+	mi := &file_master_master_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -289,7 +377,7 @@ func (x *GetAnalyticsRequest) String() string {
 func (*GetAnalyticsRequest) ProtoMessage() {}
 
 func (x *GetAnalyticsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_master_master_proto_msgTypes[4]
+	mi := &file_master_master_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -302,7 +390,7 @@ func (x *GetAnalyticsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAnalyticsRequest.ProtoReflect.Descriptor instead.
 func (*GetAnalyticsRequest) Descriptor() ([]byte, []int) {
-	return file_master_master_proto_rawDescGZIP(), []int{4}
+	return file_master_master_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetAnalyticsRequest) GetUserId() string {
@@ -335,7 +423,7 @@ type GetAnalyticsResponse struct {
 
 func (x *GetAnalyticsResponse) Reset() {
 	*x = GetAnalyticsResponse{}
-	mi := &file_master_master_proto_msgTypes[5]
+	mi := &file_master_master_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -347,7 +435,7 @@ func (x *GetAnalyticsResponse) String() string {
 func (*GetAnalyticsResponse) ProtoMessage() {}
 
 func (x *GetAnalyticsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_master_master_proto_msgTypes[5]
+	mi := &file_master_master_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -360,7 +448,7 @@ func (x *GetAnalyticsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAnalyticsResponse.ProtoReflect.Descriptor instead.
 func (*GetAnalyticsResponse) Descriptor() ([]byte, []int) {
-	return file_master_master_proto_rawDescGZIP(), []int{5}
+	return file_master_master_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetAnalyticsResponse) GetStatistics() *analyzer.GetStatisticsResponse {
@@ -381,7 +469,7 @@ type GetForecastRequest struct {
 
 func (x *GetForecastRequest) Reset() {
 	*x = GetForecastRequest{}
-	mi := &file_master_master_proto_msgTypes[6]
+	mi := &file_master_master_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -393,7 +481,7 @@ func (x *GetForecastRequest) String() string {
 func (*GetForecastRequest) ProtoMessage() {}
 
 func (x *GetForecastRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_master_master_proto_msgTypes[6]
+	mi := &file_master_master_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -406,7 +494,7 @@ func (x *GetForecastRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetForecastRequest.ProtoReflect.Descriptor instead.
 func (*GetForecastRequest) Descriptor() ([]byte, []int) {
-	return file_master_master_proto_rawDescGZIP(), []int{6}
+	return file_master_master_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetForecastRequest) GetUserId() string {
@@ -439,7 +527,7 @@ type GetForecastResponse struct {
 
 func (x *GetForecastResponse) Reset() {
 	*x = GetForecastResponse{}
-	mi := &file_master_master_proto_msgTypes[7]
+	mi := &file_master_master_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -451,7 +539,7 @@ func (x *GetForecastResponse) String() string {
 func (*GetForecastResponse) ProtoMessage() {}
 
 func (x *GetForecastResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_master_master_proto_msgTypes[7]
+	mi := &file_master_master_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -464,7 +552,7 @@ func (x *GetForecastResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetForecastResponse.ProtoReflect.Descriptor instead.
 func (*GetForecastResponse) Descriptor() ([]byte, []int) {
-	return file_master_master_proto_rawDescGZIP(), []int{7}
+	return file_master_master_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetForecastResponse) GetForecasts() []*analyzer.Forecast {
@@ -490,7 +578,11 @@ const file_master_master_proto_rawDesc = "" +
 	"\x04date\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\x04date\x12 \n" +
 	"\vdescription\x18\b \x01(\tR\vdescription\"R\n" +
 	"\x19CreateTransactionResponse\x125\n" +
-	"\vtransaction\x18\x01 \x01(\v2\x13.wallet.TransactionR\vtransaction\",\n" +
+	"\vtransaction\x18\x01 \x01(\v2\x13.wallet.TransactionR\vtransaction\"1\n" +
+	"\x16GetTransactionsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"R\n" +
+	"\x17GetTransactionsResponse\x127\n" +
+	"\ftransactions\x18\x01 \x03(\v2\x13.wallet.TransactionR\ftransactions\",\n" +
 	"\x11GetBalanceRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"u\n" +
 	"\x12GetBalanceResponse\x122\n" +
@@ -510,9 +602,10 @@ const file_master_master_proto_rawDesc = "" +
 	"\x06period\x18\x02 \x01(\x0e2\x12.common.TimePeriodR\x06period\x12#\n" +
 	"\rperiods_ahead\x18\x03 \x01(\x05R\fperiodsAhead\"G\n" +
 	"\x13GetForecastResponse\x120\n" +
-	"\tforecasts\x18\x01 \x03(\v2\x12.analyzer.ForecastR\tforecasts2\xaa\x03\n" +
+	"\tforecasts\x18\x01 \x03(\v2\x12.analyzer.ForecastR\tforecasts2\xa5\x04\n" +
 	"\rMasterService\x12r\n" +
-	"\x11CreateTransaction\x12 .master.CreateTransactionRequest\x1a!.master.CreateTransactionResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/transactions\x12e\n" +
+	"\x11CreateTransaction\x12 .master.CreateTransactionRequest\x1a!.master.CreateTransactionResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/transactions\x12y\n" +
+	"\x0fGetTransactions\x12\x1e.master.GetTransactionsRequest\x1a\x1f.master.GetTransactionsResponse\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/users/{user_id}/transactions\x12e\n" +
 	"\n" +
 	"GetBalance\x12\x19.master.GetBalanceRequest\x1a\x1a.master.GetBalanceResponse\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/users/{user_id}/balance\x12`\n" +
 	"\fGetAnalytics\x12\x1b.master.GetAnalyticsRequest\x1a\x1c.master.GetAnalyticsResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
@@ -533,50 +626,55 @@ func file_master_master_proto_rawDescGZIP() []byte {
 	return file_master_master_proto_rawDescData
 }
 
-var file_master_master_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_master_master_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_master_master_proto_goTypes = []any{
 	(*CreateTransactionRequest)(nil),       // 0: master.CreateTransactionRequest
 	(*CreateTransactionResponse)(nil),      // 1: master.CreateTransactionResponse
-	(*GetBalanceRequest)(nil),              // 2: master.GetBalanceRequest
-	(*GetBalanceResponse)(nil),             // 3: master.GetBalanceResponse
-	(*GetAnalyticsRequest)(nil),            // 4: master.GetAnalyticsRequest
-	(*GetAnalyticsResponse)(nil),           // 5: master.GetAnalyticsResponse
-	(*GetForecastRequest)(nil),             // 6: master.GetForecastRequest
-	(*GetForecastResponse)(nil),            // 7: master.GetForecastResponse
-	(common.TransactionType)(0),            // 8: common.TransactionType
-	(*common.Money)(nil),                   // 9: common.Money
-	(*timestamppb.Timestamp)(nil),          // 10: google.protobuf.Timestamp
-	(*wallet.Transaction)(nil),             // 11: wallet.Transaction
-	(*wallet.Account)(nil),                 // 12: wallet.Account
-	(*analyzer.GetStatisticsResponse)(nil), // 13: analyzer.GetStatisticsResponse
-	(common.TimePeriod)(0),                 // 14: common.TimePeriod
-	(*analyzer.Forecast)(nil),              // 15: analyzer.Forecast
+	(*GetTransactionsRequest)(nil),         // 2: master.GetTransactionsRequest
+	(*GetTransactionsResponse)(nil),        // 3: master.GetTransactionsResponse
+	(*GetBalanceRequest)(nil),              // 4: master.GetBalanceRequest
+	(*GetBalanceResponse)(nil),             // 5: master.GetBalanceResponse
+	(*GetAnalyticsRequest)(nil),            // 6: master.GetAnalyticsRequest
+	(*GetAnalyticsResponse)(nil),           // 7: master.GetAnalyticsResponse
+	(*GetForecastRequest)(nil),             // 8: master.GetForecastRequest
+	(*GetForecastResponse)(nil),            // 9: master.GetForecastResponse
+	(common.TransactionType)(0),            // 10: common.TransactionType
+	(*common.Money)(nil),                   // 11: common.Money
+	(*timestamppb.Timestamp)(nil),          // 12: google.protobuf.Timestamp
+	(*wallet.Transaction)(nil),             // 13: wallet.Transaction
+	(*wallet.Account)(nil),                 // 14: wallet.Account
+	(*analyzer.GetStatisticsResponse)(nil), // 15: analyzer.GetStatisticsResponse
+	(common.TimePeriod)(0),                 // 16: common.TimePeriod
+	(*analyzer.Forecast)(nil),              // 17: analyzer.Forecast
 }
 var file_master_master_proto_depIdxs = []int32{
-	8,  // 0: master.CreateTransactionRequest.type:type_name -> common.TransactionType
-	9,  // 1: master.CreateTransactionRequest.amount:type_name -> common.Money
-	10, // 2: master.CreateTransactionRequest.date:type_name -> google.protobuf.Timestamp
-	11, // 3: master.CreateTransactionResponse.transaction:type_name -> wallet.Transaction
-	9,  // 4: master.GetBalanceResponse.total_balance:type_name -> common.Money
-	12, // 5: master.GetBalanceResponse.accounts:type_name -> wallet.Account
-	10, // 6: master.GetAnalyticsRequest.start_date:type_name -> google.protobuf.Timestamp
-	10, // 7: master.GetAnalyticsRequest.end_date:type_name -> google.protobuf.Timestamp
-	13, // 8: master.GetAnalyticsResponse.statistics:type_name -> analyzer.GetStatisticsResponse
-	14, // 9: master.GetForecastRequest.period:type_name -> common.TimePeriod
-	15, // 10: master.GetForecastResponse.forecasts:type_name -> analyzer.Forecast
-	0,  // 11: master.MasterService.CreateTransaction:input_type -> master.CreateTransactionRequest
-	2,  // 12: master.MasterService.GetBalance:input_type -> master.GetBalanceRequest
-	4,  // 13: master.MasterService.GetAnalytics:input_type -> master.GetAnalyticsRequest
-	6,  // 14: master.MasterService.GetForecast:input_type -> master.GetForecastRequest
-	1,  // 15: master.MasterService.CreateTransaction:output_type -> master.CreateTransactionResponse
-	3,  // 16: master.MasterService.GetBalance:output_type -> master.GetBalanceResponse
-	5,  // 17: master.MasterService.GetAnalytics:output_type -> master.GetAnalyticsResponse
-	7,  // 18: master.MasterService.GetForecast:output_type -> master.GetForecastResponse
-	15, // [15:19] is the sub-list for method output_type
-	11, // [11:15] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	10, // 0: master.CreateTransactionRequest.type:type_name -> common.TransactionType
+	11, // 1: master.CreateTransactionRequest.amount:type_name -> common.Money
+	12, // 2: master.CreateTransactionRequest.date:type_name -> google.protobuf.Timestamp
+	13, // 3: master.CreateTransactionResponse.transaction:type_name -> wallet.Transaction
+	13, // 4: master.GetTransactionsResponse.transactions:type_name -> wallet.Transaction
+	11, // 5: master.GetBalanceResponse.total_balance:type_name -> common.Money
+	14, // 6: master.GetBalanceResponse.accounts:type_name -> wallet.Account
+	12, // 7: master.GetAnalyticsRequest.start_date:type_name -> google.protobuf.Timestamp
+	12, // 8: master.GetAnalyticsRequest.end_date:type_name -> google.protobuf.Timestamp
+	15, // 9: master.GetAnalyticsResponse.statistics:type_name -> analyzer.GetStatisticsResponse
+	16, // 10: master.GetForecastRequest.period:type_name -> common.TimePeriod
+	17, // 11: master.GetForecastResponse.forecasts:type_name -> analyzer.Forecast
+	0,  // 12: master.MasterService.CreateTransaction:input_type -> master.CreateTransactionRequest
+	2,  // 13: master.MasterService.GetTransactions:input_type -> master.GetTransactionsRequest
+	4,  // 14: master.MasterService.GetBalance:input_type -> master.GetBalanceRequest
+	6,  // 15: master.MasterService.GetAnalytics:input_type -> master.GetAnalyticsRequest
+	8,  // 16: master.MasterService.GetForecast:input_type -> master.GetForecastRequest
+	1,  // 17: master.MasterService.CreateTransaction:output_type -> master.CreateTransactionResponse
+	3,  // 18: master.MasterService.GetTransactions:output_type -> master.GetTransactionsResponse
+	5,  // 19: master.MasterService.GetBalance:output_type -> master.GetBalanceResponse
+	7,  // 20: master.MasterService.GetAnalytics:output_type -> master.GetAnalyticsResponse
+	9,  // 21: master.MasterService.GetForecast:output_type -> master.GetForecastResponse
+	17, // [17:22] is the sub-list for method output_type
+	12, // [12:17] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_master_master_proto_init() }
@@ -590,7 +688,7 @@ func file_master_master_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_master_master_proto_rawDesc), len(file_master_master_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

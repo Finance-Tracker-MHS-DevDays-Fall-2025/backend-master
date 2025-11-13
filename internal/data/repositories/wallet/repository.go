@@ -18,7 +18,6 @@ type WalletRepository interface {
 	GetTransactionsByAccountID(
 		ctx context.Context,
 		accountID uuid.UUID,
-		limit int,
 	) ([]Transaction, error)
 
 	CreateTransaction(
@@ -85,7 +84,6 @@ func (repo *walletRepositoryImpl) GetAccountsByUserID(
 func (repo *walletRepositoryImpl) GetTransactionsByAccountID(
 	ctx context.Context,
 	accountID uuid.UUID,
-	limit int,
 ) ([]Transaction, error) {
 	query := `
 		SELECT 
@@ -105,11 +103,10 @@ func (repo *walletRepositoryImpl) GetTransactionsByAccountID(
 			AND account_id = $1
 
 		ORDER BY created_at DESC
-		LIMIT $2
 	`
 
 	var transactions []Transaction
-	err := repo.db.GetDB().SelectContext(ctx, &transactions, query, accountID, limit)
+	err := repo.db.GetDB().SelectContext(ctx, &transactions, query, accountID)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to get transactions for aid %s: %w",

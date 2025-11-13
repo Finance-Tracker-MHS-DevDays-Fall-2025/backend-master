@@ -141,6 +141,36 @@
           "MasterService"
         ]
       }
+    },
+    "/users/{userId}/transactions": {
+      "get": {
+        "operationId": "MasterService_GetTransactions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/masterGetTransactionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MasterService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -372,6 +402,18 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/analyzerForecast"
+          }
+        }
+      }
+    },
+    "masterGetTransactionsResponse": {
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/walletTransaction"
           }
         }
       }

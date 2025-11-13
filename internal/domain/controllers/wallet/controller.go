@@ -21,10 +21,9 @@ type WalletController interface {
 		userID string,
 	) (*pb.GetAccountsResponse, error)
 
-	GetAccountTransactions(
+	GetUserTransactions(
 		ctx context.Context,
-		accountID string,
-		limit int32,
+		userId string,
 	) (*pb.GetTransactionsResponse, error)
 
 	CreateTransaction(
@@ -85,19 +84,26 @@ func (cont *walletControllerImpl) GetUserAccounts(
 	}, nil
 }
 
-func (cont *walletControllerImpl) GetAccountTransactions(
+func (cont *walletControllerImpl) GetUserTransactions(
 	ctx context.Context,
-	accountID string,
-	limit int32,
+	userId string,
 ) (*pb.GetTransactionsResponse, error) {
-	aid, err := uuid.Parse(accountID)
+	uid, err := uuid.Parse(userId)
 	if err != nil {
 		return nil, fmt.Errorf("invalid account ID: %w", err)
 	}
 
-	transactions, err := cont.repo.GetTransactionsByAccountID(ctx, aid, int(limit))
-	if err != nil {
-		return nil, fmt.Errorf("failed to get transactions from repository: %w", err)
+	accounts, err := cont.repo.GetAccountsByUserID(ctx, uid)
+
+	transactions := make([]wallet.Transaction, 16)
+
+	for _, acc := range accounts {
+		accTransactions, err := cont.repo.GetTransactionsByAccountID(ctx, acc.ID)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get transactions from repository: %w", err)
+		}
+
+		transactions = append(transactions, accTransactions...)
 	}
 
 	pbTransactions := make([]*pb.Transaction, 0, len(transactions))

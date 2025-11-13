@@ -90,6 +90,7 @@ type Security struct {
 	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	CurrentPrice   *common.Money          `protobuf:"bytes,4,opt,name=current_price,json=currentPrice,proto3" json:"current_price,omitempty"`
 	PriceUpdatedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=price_updated_at,json=priceUpdatedAt,proto3" json:"price_updated_at,omitempty"`
+	Type           string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -157,6 +158,13 @@ func (x *Security) GetPriceUpdatedAt() *timestamppb.Timestamp {
 		return x.PriceUpdatedAt
 	}
 	return nil
+}
+
+func (x *Security) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
 }
 
 type SecurityPayment struct {
@@ -611,13 +619,14 @@ const file_market_market_proto_rawDesc = "" +
 	"\x12InvestmentPosition\x12\x12\n" +
 	"\x04figi\x18\x01 \x01(\tR\x04figi\x12\x1a\n" +
 	"\bquantity\x18\x02 \x01(\x05R\bquantity\x12#\n" +
-	"\x05price\x18\x03 \x01(\v2\r.common.MoneyR\x05price\"\xbc\x01\n" +
+	"\x05price\x18\x03 \x01(\v2\r.common.MoneyR\x05price\"\xd0\x01\n" +
 	"\bSecurity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04figi\x18\x02 \x01(\tR\x04figi\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x122\n" +
 	"\rcurrent_price\x18\x04 \x01(\v2\r.common.MoneyR\fcurrentPrice\x12D\n" +
-	"\x10price_updated_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0epriceUpdatedAt\"\x8d\x01\n" +
+	"\x10price_updated_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0epriceUpdatedAt\x12\x12\n" +
+	"\x04type\x18\x06 \x01(\tR\x04type\"\x8d\x01\n" +
 	"\x0fSecurityPayment\x12\x12\n" +
 	"\x04figi\x18\x01 \x01(\tR\x04figi\x12'\n" +
 	"\apayment\x18\x02 \x01(\v2\r.common.MoneyR\apayment\x12=\n" +

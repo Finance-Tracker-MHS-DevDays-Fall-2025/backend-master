@@ -136,7 +136,7 @@ func (cont *walletControllerImpl) CreateTransaction(
 		return nil, fmt.Errorf("invalid account ID: %w", err)
 	}
 
-	txTypeStr := common.TransactionType_name[int32(txType)]
+	txTypeStr := wallet.TransactionPbTypeToDbType(txType)
 
 	tx := &wallet.Transaction{
 		AccountID: aid,

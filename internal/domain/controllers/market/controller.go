@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"backend-master/internal/api-gen/proto/common"
 	pb "backend-master/internal/api-gen/proto/market"
 	"backend-master/internal/data/repositories/market"
 
@@ -60,19 +61,23 @@ func (cont *marketControllerImpl) GetInvestmentPositions(
 		return nil, fmt.Errorf("invalid account ID: %w", err)
 	}
 
-	positions, err := cont.repo.GetInvestmentPositionsByAccountID(ctx, aid)
+	positions, err := cont.client.GetInvestmentPositions(
+		ctx,
+		&pb.GetInvestmentPositionsRequest{
+			AccountId: aid.String(),
+			UserId:    "uid",
+			Backend: &common.AccountBackend{
+				Type:      "TInvest",
+				AccountId: "aid",
+				Token:     "tok",
+			},
+		},
+	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get investment positions from repository: %w", err)
+		return nil, fmt.Errorf("failed to get investment positions from client: %w", err)
 	}
 
-	pbPositions := make([]*pb.InvestmentPosition, 0, len(positions))
-	for _, pos := range positions {
-		pbPositions = append(pbPositions, pos.ToProto())
-	}
-
-	return &pb.GetInvestmentPositionsResponse{
-		Positions: pbPositions,
-	}, nil
+	return positions, nil
 }
 
 func (cont *marketControllerImpl) GetSecurity(

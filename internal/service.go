@@ -14,6 +14,7 @@ import (
 	_ "embed"
 	"fmt"
 	"net"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -148,7 +149,10 @@ func (s *serviceImpl) Start() error {
 	apiRouter.GET("/docs", docs.NewSwaggerHandler(swaggerJSON))
 
 	apiV1Router := apiRouter.Group("/v1")
-	apiV1Router.Any("/*path", gin.WrapH(grpcMux))
+	apiV1Router.Any(
+		"/*path",
+		gin.WrapH(http.StripPrefix("/api/v1", grpcMux)),
+	)
 
 	s.logger.Info("starting HTTP server", zap.String("addr", httpAddr))
 

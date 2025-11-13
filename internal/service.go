@@ -53,12 +53,25 @@ func NewService(
 	walletRepository := walletRepo.NewRepository(dbManager, logger)
 	analyzerRepository := analRepo.NewRepository(dbManager, logger)
 
-	walletClient, err := walletRepo.NewClient(cfg.SlavesCfg.WalletUrl, logger)
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithUnaryInterceptor(presentation.UnaryClientInterceptor(logger)),
+	}
+
+	walletClient, err := walletRepo.NewClient(
+		cfg.SlavesCfg.WalletUrl,
+		logger,
+		opts...,
+	)
 	if err != nil {
 		logger.Fatal("failed to initialize wallet client", zap.Error(err))
 	}
 
-	analyzerClient, err := analRepo.NewClient(cfg.SlavesCfg.AnalyzerUrl, logger)
+	analyzerClient, err := analRepo.NewClient(
+		cfg.SlavesCfg.AnalyzerUrl,
+		logger,
+		opts...,
+	)
 	if err != nil {
 		logger.Fatal("failed to initialize analyzer client", zap.Error(err))
 	}
@@ -66,7 +79,9 @@ func NewService(
 	walletCtrl := walletController.NewController(walletRepository, walletClient, logger)
 	analyzerCtrl := analyzerController.NewController(analyzerRepository, analyzerClient, logger)
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(presentation.UnaryServerInterceptor(logger)),
+	)
 	masterService := presentation.NewMasterService(logger, walletCtrl, analyzerCtrl)
 	pb.RegisterMasterServiceServer(grpcServer, masterService)
 
@@ -110,6 +125,7 @@ func (s *serviceImpl) Start() error {
 	grpcMux := runtime.NewServeMux()
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithUnaryInterceptor(presentation.UnaryClientInterceptor(s.logger)),
 	}
 
 	err := pb.RegisterMasterServiceHandlerFromEndpoint(

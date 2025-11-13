@@ -8,7 +8,6 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type MarketClient struct {
@@ -20,11 +19,9 @@ type MarketClient struct {
 func NewClient(
 	address string,
 	logger *zap.Logger,
+	opts ...grpc.DialOption,
 ) (*MarketClient, error) {
-	conn, err := grpc.NewClient(
-		address,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to market service: %w", err)
 	}
@@ -94,4 +91,3 @@ func (c *MarketClient) Close() error {
 	}
 	return nil
 }
-

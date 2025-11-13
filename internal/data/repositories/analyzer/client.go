@@ -8,7 +8,6 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type AnalyzerClient struct {
@@ -20,11 +19,9 @@ type AnalyzerClient struct {
 func NewClient(
 	address string,
 	logger *zap.Logger,
+	opts ...grpc.DialOption,
 ) (*AnalyzerClient, error) {
-	conn, err := grpc.NewClient(
-		address,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to analyzer service: %w", err)
 	}
@@ -68,4 +65,3 @@ func (c *AnalyzerClient) Close() error {
 	}
 	return nil
 }
-

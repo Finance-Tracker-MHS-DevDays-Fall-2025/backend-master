@@ -8,7 +8,6 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type WalletClient struct {
@@ -20,11 +19,9 @@ type WalletClient struct {
 func NewClient(
 	address string,
 	logger *zap.Logger,
+	opts ...grpc.DialOption,
 ) (*WalletClient, error) {
-	conn, err := grpc.NewClient(
-		address,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to wallet service: %w", err)
 	}

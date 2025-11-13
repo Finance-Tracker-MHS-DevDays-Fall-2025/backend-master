@@ -8,7 +8,6 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type NotificationClient struct {
@@ -20,11 +19,9 @@ type NotificationClient struct {
 func NewClient(
 	address string,
 	logger *zap.Logger,
+	opts ...grpc.DialOption,
 ) (*NotificationClient, error) {
-	conn, err := grpc.NewClient(
-		address,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to notification service: %w", err)
 	}
@@ -55,4 +52,3 @@ func (c *NotificationClient) Close() error {
 	}
 	return nil
 }
-

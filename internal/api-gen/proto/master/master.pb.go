@@ -510,9 +510,9 @@ const file_master_master_proto_rawDesc = "" +
 	"\x06period\x18\x02 \x01(\x0e2\x12.common.TimePeriodR\x06period\x12#\n" +
 	"\rperiods_ahead\x18\x03 \x01(\x05R\fperiodsAhead\"G\n" +
 	"\x13GetForecastResponse\x120\n" +
-	"\tforecasts\x18\x01 \x03(\v2\x12.analyzer.ForecastR\tforecasts2\xad\x03\n" +
-	"\rMasterService\x12u\n" +
-	"\x11CreateTransaction\x12 .master.CreateTransactionRequest\x1a!.master.CreateTransactionResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/transactions\x12e\n" +
+	"\tforecasts\x18\x01 \x03(\v2\x12.analyzer.ForecastR\tforecasts2\xaa\x03\n" +
+	"\rMasterService\x12r\n" +
+	"\x11CreateTransaction\x12 .master.CreateTransactionRequest\x1a!.master.CreateTransactionResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/transactions\x12e\n" +
 	"\n" +
 	"GetBalance\x12\x19.master.GetBalanceRequest\x1a\x1a.master.GetBalanceResponse\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/users/{user_id}/balance\x12`\n" +
 	"\fGetAnalytics\x12\x1b.master.GetAnalyticsRequest\x1a\x1c.master.GetAnalyticsResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +

@@ -167,7 +167,7 @@ func RegisterMasterServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/CreateTransaction", runtime.WithHTTPPathPattern("/v1/transactions"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/CreateTransaction", runtime.WithHTTPPathPattern("/transactions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -285,7 +285,7 @@ func RegisterMasterServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/CreateTransaction", runtime.WithHTTPPathPattern("/v1/transactions"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/CreateTransaction", runtime.WithHTTPPathPattern("/transactions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -353,7 +353,7 @@ func RegisterMasterServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 }
 
 var (
-	pattern_MasterService_CreateTransaction_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "transactions"}, ""))
+	pattern_MasterService_CreateTransaction_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"transactions"}, ""))
 	pattern_MasterService_GetBalance_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"users", "user_id", "balance"}, ""))
 	pattern_MasterService_GetAnalytics_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"analytics"}, ""))
 	pattern_MasterService_GetForecast_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"forecast"}, ""))

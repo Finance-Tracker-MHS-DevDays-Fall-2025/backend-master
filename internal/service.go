@@ -98,6 +98,10 @@ func NewService(
 func (s *serviceImpl) Start() error {
 	ctx := context.Background()
 
+	grpcLocalAddr := fmt.Sprintf(
+		"localhost:%d",
+		s.cfg.ServerCfg.GrpcPort,
+	)
 	grpcAddr := fmt.Sprintf(
 		"%s:%d",
 		s.cfg.ServerCfg.ServerHost,
@@ -131,7 +135,7 @@ func (s *serviceImpl) Start() error {
 	err := pb.RegisterMasterServiceHandlerFromEndpoint(
 		ctx,
 		grpcMux,
-		grpcAddr,
+		grpcLocalAddr,
 		opts,
 	)
 	if err != nil {

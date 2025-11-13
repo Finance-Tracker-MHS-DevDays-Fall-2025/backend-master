@@ -37,6 +37,8 @@ make run
 - `make sync-submodules` - синхронизировать сабмодули репозитория. В том числе, синхронизировать common-репозиторий, где лежат все протобафы
 - `make protogen` - сгенерировать Go код из protobuf
 - `make run` - запустить сервис
+- `make build-img` - собрать Docker-образ
+- `make upload-img` - загрузить Docker-образ в Yandex Cloud Registry
 
 ## Структура проекта
 

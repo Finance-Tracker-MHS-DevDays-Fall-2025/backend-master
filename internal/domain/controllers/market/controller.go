@@ -57,21 +57,12 @@ func (cont *marketControllerImpl) GetInvestmentPositions(
 ) (*pb.GetInvestmentPositionsResponse, error) {
 	aid, err := uuid.Parse(accountID)
 	if err != nil {
-		cont.logger.Error(
-			"invalid account ID",
-			zap.Error(err),
-			zap.String("account_id", accountID),
-		)
 		return nil, fmt.Errorf("invalid account ID: %w", err)
 	}
 
 	positions, err := cont.repo.GetInvestmentPositionsByAccountID(ctx, aid)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get investment positions from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get investment positions: %w", err)
+		return nil, fmt.Errorf("failed to get investment positions from repository: %w", err)
 	}
 
 	pbPositions := make([]*pb.InvestmentPosition, 0, len(positions))
@@ -90,12 +81,7 @@ func (cont *marketControllerImpl) GetSecurity(
 ) (*pb.GetSecurityResponse, error) {
 	security, err := cont.repo.GetSecurityByFIGI(ctx, figi)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get security from repository",
-			zap.Error(err),
-			zap.String("figi", figi),
-		)
-		return nil, fmt.Errorf("failed to get security: %w", err)
+		return nil, fmt.Errorf("failed to get security from repository: %w", err)
 	}
 
 	return &pb.GetSecurityResponse{
@@ -109,11 +95,7 @@ func (cont *marketControllerImpl) GetSecuritiesPrices(
 ) (*pb.GetSecuritiesPricesResponse, error) {
 	securities, err := cont.repo.GetSecuritiesByFIGIs(ctx, figis)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get securities from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get securities: %w", err)
+		return nil, fmt.Errorf("failed to get securities from repository: %w", err)
 	}
 
 	pbSecurities := make([]*pb.Security, 0, len(securities))
@@ -132,12 +114,7 @@ func (cont *marketControllerImpl) GetSecurityPayments(
 ) (*pb.GetSecuritiesPaymentsResponse, error) {
 	payments, err := cont.repo.GetSecurityPaymentsByFIGI(ctx, figi)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get security payments from repository",
-			zap.Error(err),
-			zap.String("figi", figi),
-		)
-		return nil, fmt.Errorf("failed to get security payments: %w", err)
+		return nil, fmt.Errorf("failed to get security payments from repository: %w", err)
 	}
 
 	pbPayments := make([]*pb.SecurityPayment, 0, len(payments))

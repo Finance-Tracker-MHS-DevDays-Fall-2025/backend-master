@@ -90,12 +90,11 @@ func (repo *analyzerRepositoryImpl) GetStatistics(
 
 	err = repo.db.GetDB().GetContext(ctx, &result, query, userID, startDate, endDate)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get statistics",
-			zap.Error(err),
-			zap.String("user_id", userID.String()),
+		return 0, 0, fmt.Errorf(
+			"failed to get statistics for uid %s: %w",
+			userID.String(),
+			err,
 		)
-		return 0, 0, fmt.Errorf("failed to get statistics: %w", err)
 	}
 
 	return result.TotalIncome, result.TotalExpense, nil
@@ -157,12 +156,11 @@ func (repo *analyzerRepositoryImpl) GetPeriodBalances(
 	var balances []PeriodBalance
 	err := repo.db.GetDB().SelectContext(ctx, &balances, query, groupBy, userID, startDate, endDate)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get period balances",
-			zap.Error(err),
-			zap.String("user_id", userID.String()),
+		return nil, fmt.Errorf(
+			"failed to get period balances for uid %s: %w",
+			userID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to get period balances: %w", err)
 	}
 
 	return balances, nil
@@ -199,7 +197,11 @@ func (repo *analyzerRepositoryImpl) GetCategorySpending(
 			zap.Error(err),
 			zap.String("user_id", userID.String()),
 		)
-		return nil, fmt.Errorf("failed to get category spending: %w", err)
+		return nil, fmt.Errorf(
+			"failed to get category spending for uid %s: %w",
+			userID.String(),
+			err,
+		)
 	}
 
 	return spending, nil

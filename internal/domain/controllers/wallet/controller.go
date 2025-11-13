@@ -64,21 +64,12 @@ func (cont *walletControllerImpl) GetUserAccounts(
 ) (*pb.GetAccountsResponse, error) {
 	uid, err := uuid.Parse(userID)
 	if err != nil {
-		cont.logger.Error(
-			"invalid user ID",
-			zap.Error(err),
-			zap.String("user_id", userID),
-		)
 		return nil, fmt.Errorf("invalid user ID: %w", err)
 	}
 
 	accounts, err := cont.repo.GetAccountsByUserID(ctx, uid)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get accounts from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get accounts: %w", err)
+		return nil, fmt.Errorf("failed to get accounts from repository: %w", err)
 	}
 
 	pbAccounts := make([]*pb.Account, 0, len(accounts))
@@ -101,21 +92,12 @@ func (cont *walletControllerImpl) GetAccountTransactions(
 ) (*pb.GetTransactionsResponse, error) {
 	aid, err := uuid.Parse(accountID)
 	if err != nil {
-		cont.logger.Error(
-			"invalid account ID",
-			zap.Error(err),
-			zap.String("account_id", accountID),
-		)
 		return nil, fmt.Errorf("invalid account ID: %w", err)
 	}
 
 	transactions, err := cont.repo.GetTransactionsByAccountID(ctx, aid, int(limit))
 	if err != nil {
-		cont.logger.Error(
-			"failed to get transactions from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get transactions: %w", err)
+		return nil, fmt.Errorf("failed to get transactions from repository: %w", err)
 	}
 
 	pbTransactions := make([]*pb.Transaction, 0, len(transactions))
@@ -151,11 +133,6 @@ func (cont *walletControllerImpl) CreateTransaction(
 ) (*pb.Transaction, error) {
 	aid, err := uuid.Parse(accountID)
 	if err != nil {
-		cont.logger.Error(
-			"invalid account ID",
-			zap.Error(err),
-			zap.String("account_id", accountID),
-		)
 		return nil, fmt.Errorf("invalid account ID: %w", err)
 	}
 
@@ -186,11 +163,7 @@ func (cont *walletControllerImpl) CreateTransaction(
 
 	createdTx, err := cont.repo.CreateTransaction(ctx, tx)
 	if err != nil {
-		cont.logger.Error(
-			"failed to create transaction in repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to create transaction: %w", err)
+		return nil, fmt.Errorf("failed to create transaction in repository: %w", err)
 	}
 
 	balanceChange := amount

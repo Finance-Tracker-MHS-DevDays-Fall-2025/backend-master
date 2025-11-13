@@ -65,12 +65,11 @@ func (repo *marketRepositoryImpl) GetInvestmentPositionsByAccountID(
 	var positions []InvestmentPosition
 	err := repo.db.GetDB().SelectContext(ctx, &positions, query, accountID)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get investment positions",
-			zap.Error(err),
-			zap.String("account_id", accountID.String()),
+		return nil, fmt.Errorf(
+			"failed to get investment positions for aid %s: %w",
+			accountID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to get investment positions: %w", err)
 	}
 
 	return positions, nil
@@ -95,12 +94,11 @@ func (repo *marketRepositoryImpl) GetSecurityByFIGI(
 	var security Security
 	err := repo.db.GetDB().GetContext(ctx, &security, query, figi)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get security",
-			zap.Error(err),
-			zap.String("figi", figi),
+		return nil, fmt.Errorf(
+			"failed to get security for figi %s: %w",
+			figi,
+			err,
 		)
-		return nil, fmt.Errorf("failed to get security: %w", err)
 	}
 
 	return &security, nil
@@ -125,12 +123,11 @@ func (repo *marketRepositoryImpl) GetSecuritiesByFIGIs(
 	var securities []Security
 	err := repo.db.GetDB().SelectContext(ctx, &securities, query, figis)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get securities",
-			zap.Error(err),
-			zap.Int("count", len(figis)),
+		return nil, fmt.Errorf(
+			"failed to get securities for figis %v: %w",
+			figis,
+			err,
 		)
-		return nil, fmt.Errorf("failed to get securities: %w", err)
 	}
 
 	return securities, nil
@@ -155,14 +152,12 @@ func (repo *marketRepositoryImpl) GetSecurityPaymentsByFIGI(
 	var payments []SecurityPayment
 	err := repo.db.GetDB().SelectContext(ctx, &payments, query, figi)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get security payments",
-			zap.Error(err),
-			zap.String("figi", figi),
+		return nil, fmt.Errorf(
+			"failed to get security payments for figi %s: %w",
+			figi,
+			err,
 		)
-		return nil, fmt.Errorf("failed to get security payments: %w", err)
 	}
 
 	return payments, nil
 }
-

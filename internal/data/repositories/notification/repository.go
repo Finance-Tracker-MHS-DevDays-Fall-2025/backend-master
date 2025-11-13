@@ -80,12 +80,11 @@ func (repo *notificationRepositoryImpl) CreateNotification(
 		notification.CreatedAt,
 	)
 	if err != nil {
-		repo.logger.Error(
-			"failed to create notification",
-			zap.Error(err),
-			zap.String("user_id", userID.String()),
+		return nil, fmt.Errorf(
+			"failed to create notification for uid %s: %w",
+			userID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to create notification: %w", err)
 	}
 
 	return &notification, nil
@@ -113,14 +112,12 @@ func (repo *notificationRepositoryImpl) GetNotificationsByUserID(
 	var notifications []Notification
 	err := repo.db.GetDB().SelectContext(ctx, &notifications, query, userID, limit)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get notifications",
-			zap.Error(err),
-			zap.String("user_id", userID.String()),
+		return nil, fmt.Errorf(
+			"failed to get notifications for uid %s: %w",
+			userID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to get notifications: %w", err)
 	}
 
 	return notifications, nil
 }
-

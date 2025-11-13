@@ -46,11 +46,6 @@ func (cont *notificationControllerImpl) SendNotification(
 ) (*pb.SendNotificationResponse, error) {
 	uid, err := uuid.Parse(userID)
 	if err != nil {
-		cont.logger.Error(
-			"invalid user ID",
-			zap.Error(err),
-			zap.String("user_id", userID),
-		)
 		return nil, fmt.Errorf("invalid user ID: %w", err)
 	}
 
@@ -62,11 +57,7 @@ func (cont *notificationControllerImpl) SendNotification(
 
 	resp, err := cont.client.SendNotification(ctx, req)
 	if err != nil {
-		cont.logger.Error(
-			"failed to send notification via client",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to send notification: %w", err)
+		return nil, fmt.Errorf("failed to send notification  via client: %w", err)
 	}
 
 	_, err = cont.repo.CreateNotification(ctx, uid, title, message)

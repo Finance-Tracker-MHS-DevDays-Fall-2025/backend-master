@@ -57,40 +57,23 @@ func (cont *analyzerControllerImpl) GetStatistics(
 ) (*pb.GetStatisticsResponse, error) {
 	uid, err := uuid.Parse(userID)
 	if err != nil {
-		cont.logger.Error(
-			"invalid user ID",
-			zap.Error(err),
-			zap.String("user_id", userID),
-		)
 		return nil, fmt.Errorf("invalid user ID: %w", err)
 	}
 
 	totalIncome, totalExpense, err := cont.repo.GetStatistics(ctx, uid, startDate, endDate)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get statistics from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get statistics: %w", err)
+		return nil, fmt.Errorf("failed to get statistics from repository: %w", err)
 	}
 
 	groupByStr := mapTimePeriodToString(groupBy)
 	periodBalances, err := cont.repo.GetPeriodBalances(ctx, uid, startDate, endDate, groupByStr)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get period balances from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get period balances: %w", err)
+		return nil, fmt.Errorf("failed to get period balances from repository: %w", err)
 	}
 
 	categorySpending, err := cont.repo.GetCategorySpending(ctx, uid, startDate, endDate)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get category spending from repository",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get category spending: %w", err)
+		return nil, fmt.Errorf("failed to get category spending from repository: %w", err)
 	}
 
 	pbCategorySpending := make([]*pb.CategorySpending, 0, len(categorySpending))
@@ -137,11 +120,7 @@ func (cont *analyzerControllerImpl) GetForecast(
 
 	totalIncome, totalExpense, err := cont.repo.GetStatistics(ctx, uid, startDate, endDate)
 	if err != nil {
-		cont.logger.Error(
-			"failed to get historical statistics for forecast",
-			zap.Error(err),
-		)
-		return nil, fmt.Errorf("failed to get historical statistics: %w", err)
+		return nil, fmt.Errorf("failed to get historical statistics for forecast: %w", err)
 	}
 
 	avgIncome := totalIncome / 12

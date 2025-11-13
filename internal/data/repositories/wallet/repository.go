@@ -69,12 +69,11 @@ func (repo *walletRepositoryImpl) GetAccountsByUserID(
 	var accounts []Account
 	err := repo.db.GetDB().SelectContext(ctx, &accounts, query, userID)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get accounts",
-			zap.Error(err),
-			zap.String("user_id", userID.String()),
+		return nil, fmt.Errorf(
+			"failed to get accounts for uid: %s %w",
+			userID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to get accounts: %w", err)
 	}
 
 	return accounts, nil
@@ -105,13 +104,11 @@ func (repo *walletRepositoryImpl) GetTransactionsByAccountID(
 	var transactions []Transaction
 	err := repo.db.GetDB().SelectContext(ctx, &transactions, query, accountID, limit)
 	if err != nil {
-		repo.logger.Error(
-			"failed to get transactions",
-			zap.Error(err),
-			zap.String("account_id", accountID.String()),
-			zap.Int("limit", limit),
+		return nil, fmt.Errorf(
+			"failed to get transactions for aid %s: %w",
+			accountID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to get transactions: %w", err)
 	}
 
 	return transactions, nil
@@ -153,12 +150,11 @@ func (repo *walletRepositoryImpl) CreateTransaction(
 		tx.CreatedAt,
 	)
 	if err != nil {
-		repo.logger.Error(
-			"failed to create transaction",
-			zap.Error(err),
-			zap.String("account_id", tx.AccountID.String()),
+		return nil, fmt.Errorf(
+			"failed to create transaction for aid %s: %w",
+			tx.AccountID.String(),
+			err,
 		)
-		return nil, fmt.Errorf("failed to create transaction: %w", err)
 	}
 
 	return tx, nil
@@ -177,13 +173,12 @@ func (repo *walletRepositoryImpl) UpdateAccountBalance(
 
 	_, err := repo.db.GetDB().ExecContext(ctx, query, amount, accountID)
 	if err != nil {
-		repo.logger.Error(
-			"failed to update account balance",
-			zap.Error(err),
-			zap.String("account_id", accountID.String()),
-			zap.Int64("amount", amount),
+		return fmt.Errorf(
+			"failed to update account balance for aid %s and amount %d: %w",
+			accountID.String(),
+			amount,
+			err,
 		)
-		return fmt.Errorf("failed to update account balance: %w", err)
 	}
 
 	return nil

@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"context"
+	"fmt"
 
 	"backend-master/internal/api-gen/proto/common"
 	pb "backend-master/internal/api-gen/proto/master"
@@ -31,7 +32,7 @@ func NewMasterService(
 }
 
 func (s *masterServiceImpl) CreateTransaction(ctx context.Context, req *pb.CreateTransactionRequest) (*pb.CreateTransactionResponse, error) {
-	s.logger.Info("CreateTransaction", zap.String("user_id", req.UserId))
+	s.logger.Info("CreateTransaction", zap.String("body", fmt.Sprintf("%v", req)))
 
 	tx, err := s.walletController.CreateTransaction(
 		ctx,
@@ -55,7 +56,7 @@ func (s *masterServiceImpl) CreateTransaction(ctx context.Context, req *pb.Creat
 }
 
 func (s *masterServiceImpl) GetBalance(ctx context.Context, req *pb.GetBalanceRequest) (*pb.GetBalanceResponse, error) {
-	s.logger.Info("GetBalance", zap.String("user_id", req.UserId))
+	s.logger.Info("GetBalance", zap.String("body", fmt.Sprintf("%v", req)))
 
 	accountsResp, err := s.walletController.GetUserAccounts(ctx, req.UserId)
 	if err != nil {
@@ -80,7 +81,7 @@ func (s *masterServiceImpl) GetBalance(ctx context.Context, req *pb.GetBalanceRe
 }
 
 func (s *masterServiceImpl) GetAnalytics(ctx context.Context, req *pb.GetAnalyticsRequest) (*pb.GetAnalyticsResponse, error) {
-	s.logger.Info("GetAnalytics", zap.String("user_id", req.UserId))
+	s.logger.Info("GetAnalytics", zap.String("body", fmt.Sprintf("%v", req)))
 
 	stats, err := s.analyzerController.GetStatistics(
 		ctx,
@@ -100,7 +101,7 @@ func (s *masterServiceImpl) GetAnalytics(ctx context.Context, req *pb.GetAnalyti
 }
 
 func (s *masterServiceImpl) GetForecast(ctx context.Context, req *pb.GetForecastRequest) (*pb.GetForecastResponse, error) {
-	s.logger.Info("GetForecast", zap.String("user_id", req.UserId))
+	s.logger.Info("GetForecast", zap.String("body", fmt.Sprintf("%v", req)))
 
 	forecast, err := s.analyzerController.GetForecast(
 		ctx,

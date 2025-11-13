@@ -53,7 +53,6 @@ func NewService(
 	}
 
 	walletRepository := walletRepo.NewRepository(dbManager, logger)
-	analyzerRepository := analRepo.NewRepository(dbManager, logger)
 
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -79,7 +78,7 @@ func NewService(
 	}
 
 	walletCtrl := walletController.NewController(walletRepository, walletClient, logger)
-	analyzerCtrl := analyzerController.NewController(analyzerRepository, analyzerClient, logger)
+	analyzerCtrl := analyzerController.NewController(analyzerClient, logger)
 
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(presentation.UnaryServerInterceptor(logger)),

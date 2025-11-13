@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type AnalyzerController interface {
@@ -31,18 +32,15 @@ type AnalyzerController interface {
 }
 
 type analyzerControllerImpl struct {
-	repo   analyzer.AnalyzerRepository
 	client *analyzer.AnalyzerClient
 	logger *zap.Logger
 }
 
 func NewController(
-	repo analyzer.AnalyzerRepository,
 	client *analyzer.AnalyzerClient,
 	logger *zap.Logger,
 ) AnalyzerController {
 	return &analyzerControllerImpl{
-		repo:   repo,
 		client: client,
 		logger: logger,
 	}
@@ -60,43 +58,19 @@ func (cont *analyzerControllerImpl) GetStatistics(
 		return nil, fmt.Errorf("invalid user ID: %w", err)
 	}
 
-	totalIncome, totalExpense, err := cont.repo.GetStatistics(ctx, uid, startDate, endDate)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get statistics from repository: %w", err)
-	}
-
-	groupByStr := mapTimePeriodToString(groupBy)
-	periodBalances, err := cont.repo.GetPeriodBalances(ctx, uid, startDate, endDate, groupByStr)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get period balances from repository: %w", err)
-	}
-
-	categorySpending, err := cont.repo.GetCategorySpending(ctx, uid, startDate, endDate)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get category spending from repository: %w", err)
-	}
-
-	pbCategorySpending := make([]*pb.CategorySpending, 0, len(categorySpending))
-	for _, cs := range categorySpending {
-		pbCategorySpending = append(pbCategorySpending, cs.ToProto())
-	}
-
-	pbPeriodData := make([]*pb.PeriodBalance, 0, len(periodBalances))
-	for _, period := range periodBalances {
-		pbPeriodData = append(pbPeriodData, period.ToProto(pbCategorySpending))
-	}
-
-	return &pb.GetStatisticsResponse{
-		TotalIncome: &common.Money{
-			Amount:   totalIncome,
-			Currency: "RUB",
+	resp, err := cont.client.GetStatistics(
+		ctx,
+		&pb.GetStatisticsRequest{
+			UserId:    uid.String(),
+			StartDate: timestamppb.New(startDate),
+			EndDate:   timestamppb.New(endDate),
+			GroupBy:   groupBy,
 		},
-		TotalExpense: &common.Money{
-			Amount:   totalExpense,
-			Currency: "RUB",
-		},
-		PeriodData: pbPeriodData,
-	}, nil
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get statistics from analyzer: %w", err)
+	}
+	return resp, nil
 }
 
 func (cont *analyzerControllerImpl) GetForecast(
@@ -115,61 +89,17 @@ func (cont *analyzerControllerImpl) GetForecast(
 		return nil, fmt.Errorf("invalid user ID: %w", err)
 	}
 
-	endDate := time.Now()
-	startDate := endDate.AddDate(-1, 0, 0)
-
-	totalIncome, totalExpense, err := cont.repo.GetStatistics(ctx, uid, startDate, endDate)
+	resp, err := cont.client.GetForecast(
+		ctx,
+		&pb.GetForecastRequest{
+			UserId:       uid.String(),
+			Period:       period,
+			PeriodsAhead: periodsAhead,
+		},
+	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get historical statistics for forecast: %w", err)
+		return nil, fmt.Errorf("failed to get forecast from analyzer: %w", err)
 	}
 
-	avgIncome := totalIncome / 12
-	avgExpense := totalExpense / 12
-
-	forecasts := make([]*pb.Forecast, 0, periodsAhead)
-	for i := int32(0); i < periodsAhead; i++ {
-		forecastStart := addPeriod(endDate, period, i)
-		forecastEnd := addPeriod(endDate, period, i+1)
-
-		forecast := analyzer.Forecast{
-			PeriodStart:     forecastStart,
-			PeriodEnd:       forecastEnd,
-			ExpectedIncome:  avgIncome,
-			ExpectedExpense: avgExpense,
-			ExpectedBalance: avgIncome - avgExpense,
-			Currency:        "RUB",
-		}
-
-		forecasts = append(forecasts, forecast.ToProto(nil))
-	}
-
-	return &pb.GetForecastResponse{
-		Forecasts: forecasts,
-	}, nil
-}
-
-func mapTimePeriodToString(period common.TimePeriod) string {
-	switch period {
-	case common.TimePeriod_TIME_PERIOD_QUARTER:
-		return "quarter"
-	case common.TimePeriod_TIME_PERIOD_MONTH:
-		return "month"
-	case common.TimePeriod_TIME_PERIOD_YEAR:
-		return "year"
-	default:
-		return "month"
-	}
-}
-
-func addPeriod(t time.Time, period common.TimePeriod, count int32) time.Time {
-	switch period {
-	case common.TimePeriod_TIME_PERIOD_QUARTER:
-		return t.AddDate(0, int(count)*4, 0)
-	case common.TimePeriod_TIME_PERIOD_MONTH:
-		return t.AddDate(0, int(count), 0)
-	case common.TimePeriod_TIME_PERIOD_YEAR:
-		return t.AddDate(int(count), 0, 0)
-	default:
-		return t.AddDate(0, int(count), 0)
-	}
+	return resp, nil
 }

@@ -3,6 +3,7 @@ package market
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"backend-master/internal/api-gen/proto/common"
 	pb "backend-master/internal/api-gen/proto/market"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type MarketController interface {
@@ -88,7 +90,7 @@ func (cont *marketControllerImpl) GetSecurity(
 	if err != nil {
 		return nil, fmt.Errorf("failed to get security from client: %w", err)
 	}
-    return security, nil
+	return security, nil
 }
 
 func (cont *marketControllerImpl) GetSecuritiesPrices(
@@ -99,7 +101,7 @@ func (cont *marketControllerImpl) GetSecuritiesPrices(
 	if err != nil {
 		return nil, fmt.Errorf("failed to get securities from client: %w", err)
 	}
-    return securities, nil
+	return securities, nil
 }
 
 func (cont *marketControllerImpl) GetSecurityPayments(
@@ -107,12 +109,12 @@ func (cont *marketControllerImpl) GetSecurityPayments(
 	figi string,
 ) (*pb.GetSecuritiesPaymentsResponse, error) {
 	payments, err := cont.client.GetSecurityPayments(ctx, &pb.GetSecuritiesPaymentsRequest{
-        Figis: []string{figi},
-        StartDate: timestamppb.New(time.Now().AddDate(0, -6, 0)),
-        StopDate: timestamppb.New(time.Now().AddDate(0, 6, 0)),
-    })
+		Figis:     []string{figi},
+		StartDate: timestamppb.New(time.Now().AddDate(0, -6, 0)),
+		EndDate:   timestamppb.New(time.Now().AddDate(0, 6, 0)),
+	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get securities from client: %w", err)
 	}
-    return payments, nil
+	return payments, nil
 }

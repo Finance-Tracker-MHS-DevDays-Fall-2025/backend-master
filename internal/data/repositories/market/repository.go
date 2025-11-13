@@ -57,8 +57,12 @@ func (repo *marketRepositoryImpl) GetInvestmentPositionsByAccountID(
 			security_id,
 			quantity,
 			created_at
+
 		FROM investment_positions
-		WHERE account_id = $1
+
+		WHERE 1=1
+			AND account_id = $1
+
 		ORDER BY created_at DESC
 	`
 
@@ -87,8 +91,11 @@ func (repo *marketRepositoryImpl) GetSecurityByFIGI(
 			type,
 			price_updated_at,
 			created_at
+		
 		FROM securities
-		WHERE figi = $1
+
+		WHERE 1=1
+			AND figi = $1
 	`
 
 	var security Security
@@ -116,8 +123,11 @@ func (repo *marketRepositoryImpl) GetSecuritiesByFIGIs(
 			type,
 			price_updated_at,
 			created_at
+
 		FROM securities
-		WHERE figi = ANY($1)
+
+		WHERE 1=1
+			AND figi = ANY($1)
 	`
 
 	var securities []Security
@@ -144,8 +154,12 @@ func (repo *marketRepositoryImpl) GetSecurityPaymentsByFIGI(
 			amount_per_share,
 			payment_date,
 			created_at
+
 		FROM securities_payments
-		WHERE security_id = $1
+
+		WHERE 1=1
+			AND security_id = $1
+
 		ORDER BY payment_date DESC
 	`
 

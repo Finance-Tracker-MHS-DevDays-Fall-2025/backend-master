@@ -10,27 +10,27 @@ import (
 )
 
 type PeriodBalance struct {
-	PeriodStart time.Time
-	PeriodEnd   time.Time
-	Income      int64
-	Expense     int64
-	Balance     int64
-	Currency    string
+	PeriodStart time.Time `db:"period_start"`
+	PeriodEnd   time.Time `db:"period_end"`
+	Income      int64     `db:"income"`
+	Expense     int64     `db:"expense"`
+	Balance     int64     `db:"balance"`
+	Currency    string    `db:"currency"`
 }
 
 type CategorySpending struct {
-	CategoryID  string
-	TotalAmount int64
-	Currency    string
+	CategoryID  string `db:"category_id"`
+	TotalAmount int64  `db:"total_amount"`
+	Currency    string `db:"currency"`
 }
 
 type Forecast struct {
-	PeriodStart     time.Time
-	PeriodEnd       time.Time
-	ExpectedIncome  int64
-	ExpectedExpense int64
-	ExpectedBalance int64
-	Currency        string
+	PeriodStart     time.Time `db:"period_start"`
+	PeriodEnd       time.Time `db:"period_end"`
+	ExpectedIncome  int64     `db:"expected_income"`
+	ExpectedExpense int64     `db:"expected_expense"`
+	ExpectedBalance int64     `db:"expected_balance"`
+	Currency        string    `db:"currency"`
 }
 
 func (p *PeriodBalance) ToProto(categoryBreakdown []*pb.CategorySpending) *pb.PeriodBalance {

@@ -62,7 +62,10 @@ func (repo *walletRepositoryImpl) GetAccountsByUserID(
 			currency, 
 			created_at
 		FROM accounts
-		WHERE user_id = $1
+
+		WHERE 1=1
+			AND user_id = $1
+
 		ORDER BY created_at DESC
 	`
 
@@ -95,8 +98,12 @@ func (repo *walletRepositoryImpl) GetTransactionsByAccountID(
 			mcc,
 			description,
 			created_at
+
 		FROM transactions
-		WHERE account_id = $1
+
+		WHERE 1=1
+			AND account_id = $1
+
 		ORDER BY created_at DESC
 		LIMIT $2
 	`

@@ -60,26 +60,29 @@ func (repo *analyzerRepositoryImpl) GetStatistics(
 			COALESCE(
 				SUM(
 					CASE 
-						WHEN type = 'INCOME' 
-						THEN amount 
+						WHEN t.type = 'INCOME' THEN t.amount 
 						ELSE 0 
 					END
 				),
 				0
 			) as total_income,
+			
 			COALESCE(
 				SUM(
 					CASE
-						WHEN type = 'EXPENSE'
-						THEN amount
+						WHEN t.type = 'EXPENSE' THEN t.amount
 						ELSE 0
 					END
 				),
 				0
 			) as total_expense
+
 		FROM transactions t
+
 		JOIN accounts a ON t.account_id = a.id
-		WHERE a.user_id = $1
+
+		WHERE 1=1
+			AND a.user_id = $1
 			AND t.created_at BETWEEN $2 AND $3
 	`
 
@@ -115,7 +118,7 @@ func (repo *analyzerRepositoryImpl) GetPeriodBalances(
 			COALESCE(
 				SUM(
 					CASE 
-						WHEN type = 'INCOME' THEN amount
+						WHEN t.type = 'INCOME' THEN t.amount
 						ELSE 0
 					END
 				),
@@ -125,7 +128,7 @@ func (repo *analyzerRepositoryImpl) GetPeriodBalances(
 			COALESCE(
 				SUM(
 					CASE
-						WHEN type = 'EXPENSE' THEN amount
+						WHEN t.type = 'EXPENSE' THEN t.amount
 						ELSE 0
 					END
 				),
@@ -135,20 +138,24 @@ func (repo *analyzerRepositoryImpl) GetPeriodBalances(
 			COALESCE(
 				SUM(
 					CASE
-						WHEN type = 'INCOME' THEN amount
-						WHEN type = 'EXPENSE' THEN -amount
+						WHEN t.type = 'INCOME' THEN t.amount
+						WHEN t.type = 'EXPENSE' THEN -t.amount
 						ELSE 0
 					END
 				),
 				0
 			) as balance,
 			
-			t.currency
+			t.currency as currency
 
 		FROM transactions t
+
 		JOIN accounts a ON t.account_id = a.id
-		WHERE a.user_id = $2
+
+		WHERE 1=1
+			AND a.user_id = $2
 			AND t.created_at BETWEEN $3 AND $4
+
 		GROUP BY date_trunc($1, t.created_at), t.currency
 		ORDER BY period_start
 	`
@@ -175,17 +182,23 @@ func (repo *analyzerRepositoryImpl) GetCategorySpending(
 	query := `
 		SELECT 
 			COALESCE(
-				t.category_id::text,
+				t.mcc::text,
 				'uncategorized'
 			) as category_id,
+			
 			SUM(t.amount) as total_amount,
-			t.currency
+			t.currency as currency
+
 		FROM transactions t
+
 		JOIN accounts a ON t.account_id = a.id
-		WHERE a.user_id = $1
+
+		WHERE 1=1
+			AND a.user_id = $1
 			AND t.type = 'EXPENSE'
 			AND t.created_at BETWEEN $2 AND $3
-		GROUP BY t.category_id, t.currency
+
+		GROUP BY t.mcc, t.currency
 		ORDER BY total_amount DESC
 	`
 

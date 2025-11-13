@@ -103,8 +103,12 @@ func (repo *notificationRepositoryImpl) GetNotificationsByUserID(
 			message,
 			sent_at,
 			created_at
+
 		FROM notifications
-		WHERE user_id = $1
+
+		WHERE 1=1
+			AND user_id = $1
+
 		ORDER BY created_at DESC
 		LIMIT $2
 	`

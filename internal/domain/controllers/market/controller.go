@@ -84,50 +84,35 @@ func (cont *marketControllerImpl) GetSecurity(
 	ctx context.Context,
 	figi string,
 ) (*pb.GetSecurityResponse, error) {
-	security, err := cont.repo.GetSecurityByFIGI(ctx, figi)
+	security, err := cont.client.GetSecurity(ctx, &pb.GetSecurityRequest{Figi: figi})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get security from repository: %w", err)
+		return nil, fmt.Errorf("failed to get security from client: %w", err)
 	}
-
-	return &pb.GetSecurityResponse{
-		Security: security.ToProto(),
-	}, nil
+    return security, nil
 }
 
 func (cont *marketControllerImpl) GetSecuritiesPrices(
 	ctx context.Context,
 	figis []string,
 ) (*pb.GetSecuritiesPricesResponse, error) {
-	securities, err := cont.repo.GetSecuritiesByFIGIs(ctx, figis)
+	securities, err := cont.client.GetSecuritiesPrices(ctx, &pb.GetSecuritiesPricesRequest{Figis: figis})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get securities from repository: %w", err)
+		return nil, fmt.Errorf("failed to get securities from client: %w", err)
 	}
-
-	pbSecurities := make([]*pb.Security, 0, len(securities))
-	for _, sec := range securities {
-		pbSecurities = append(pbSecurities, sec.ToProto())
-	}
-
-	return &pb.GetSecuritiesPricesResponse{
-		Securities: pbSecurities,
-	}, nil
+    return securities, nil
 }
 
 func (cont *marketControllerImpl) GetSecurityPayments(
 	ctx context.Context,
 	figi string,
 ) (*pb.GetSecuritiesPaymentsResponse, error) {
-	payments, err := cont.repo.GetSecurityPaymentsByFIGI(ctx, figi)
+	payments, err := cont.client.GetSecurityPayments(ctx, &pb.GetSecuritiesPaymentsRequest{
+        Figis: []string{figi},
+        StartDate: timestamppb.New(time.Now().AddDate(0, -6, 0)),
+        StopDate: timestamppb.New(time.Now().AddDate(0, 6, 0)),
+    })
 	if err != nil {
-		return nil, fmt.Errorf("failed to get security payments from repository: %w", err)
+		return nil, fmt.Errorf("failed to get securities from client: %w", err)
 	}
-
-	pbPayments := make([]*pb.SecurityPayment, 0, len(payments))
-	for _, pay := range payments {
-		pbPayments = append(pbPayments, pay.ToProto())
-	}
-
-	return &pb.GetSecuritiesPaymentsResponse{
-		Payments: pbPayments,
-	}, nil
+    return payments, nil
 }

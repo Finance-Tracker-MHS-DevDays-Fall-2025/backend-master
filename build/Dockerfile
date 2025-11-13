@@ -19,6 +19,7 @@ FROM alpine:latest AS app
 WORKDIR /app
 
 EXPOSE 8080
+EXPOSE 9090
 
 COPY --from=build /app/bin/main .
 

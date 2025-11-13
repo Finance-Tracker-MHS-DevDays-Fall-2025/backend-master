@@ -17,6 +17,23 @@
   ],
   "paths": {},
   "definitions": {
+    "analyzerCategoryAnomaly": {
+      "type": "object",
+      "properties": {
+        "mcc": {
+          "type": "string"
+        },
+        "actualAmount": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expectedAmount": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "deviationAmount": {
+          "$ref": "#/definitions/commonMoney"
+        }
+      }
+    },
     "analyzerCategorySpending": {
       "type": "object",
       "properties": {
@@ -57,6 +74,18 @@
         }
       }
     },
+    "analyzerGetAnomaliesResponse": {
+      "type": "object",
+      "properties": {
+        "anomalies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerCategoryAnomaly"
+          }
+        }
+      }
+    },
     "analyzerGetForecastResponse": {
       "type": "object",
       "properties": {
@@ -87,6 +116,18 @@
         }
       }
     },
+    "analyzerGetUpcomingRecurringResponse": {
+      "type": "object",
+      "properties": {
+        "payments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/analyzerRecurringPayment"
+          }
+        }
+      }
+    },
     "analyzerPeriodBalance": {
       "type": "object",
       "properties": {
@@ -113,6 +154,21 @@
             "type": "object",
             "$ref": "#/definitions/analyzerCategorySpending"
           }
+        }
+      }
+    },
+    "analyzerRecurringPayment": {
+      "type": "object",
+      "properties": {
+        "mcc": {
+          "type": "string"
+        },
+        "typicalAmount": {
+          "$ref": "#/definitions/commonMoney"
+        },
+        "expectedDate": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

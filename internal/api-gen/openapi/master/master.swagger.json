@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/analytics": {
+    "/analytics": {
       "post": {
         "operationId": "MasterService_GetAnalytics",
         "responses": {
@@ -48,7 +48,7 @@
         ]
       }
     },
-    "/v1/forecast": {
+    "/forecast": {
       "post": {
         "operationId": "MasterService_GetForecast",
         "responses": {
@@ -73,6 +73,36 @@
             "schema": {
               "$ref": "#/definitions/masterGetForecastRequest"
             }
+          }
+        ],
+        "tags": [
+          "MasterService"
+        ]
+      }
+    },
+    "/users/{userId}/balance": {
+      "get": {
+        "operationId": "MasterService_GetBalance",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/masterGetBalanceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -105,36 +135,6 @@
             "schema": {
               "$ref": "#/definitions/masterCreateTransactionRequest"
             }
-          }
-        ],
-        "tags": [
-          "MasterService"
-        ]
-      }
-    },
-    "/v1/users/{userId}/balance": {
-      "get": {
-        "operationId": "MasterService_GetBalance",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/masterGetBalanceResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "tags": [

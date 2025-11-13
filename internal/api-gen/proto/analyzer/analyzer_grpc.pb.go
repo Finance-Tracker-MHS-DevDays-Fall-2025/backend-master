@@ -19,8 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AnalyzerService_GetStatistics_FullMethodName = "/analyzer.AnalyzerService/GetStatistics"
-	AnalyzerService_GetForecast_FullMethodName   = "/analyzer.AnalyzerService/GetForecast"
+	AnalyzerService_GetStatistics_FullMethodName        = "/analyzer.AnalyzerService/GetStatistics"
+	AnalyzerService_GetForecast_FullMethodName          = "/analyzer.AnalyzerService/GetForecast"
+	AnalyzerService_GetAnomalies_FullMethodName         = "/analyzer.AnalyzerService/GetAnomalies"
+	AnalyzerService_GetUpcomingRecurring_FullMethodName = "/analyzer.AnalyzerService/GetUpcomingRecurring"
 )
 
 // AnalyzerServiceClient is the client API for AnalyzerService service.
@@ -29,6 +31,8 @@ const (
 type AnalyzerServiceClient interface {
 	GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*GetStatisticsResponse, error)
 	GetForecast(ctx context.Context, in *GetForecastRequest, opts ...grpc.CallOption) (*GetForecastResponse, error)
+	GetAnomalies(ctx context.Context, in *GetAnomaliesRequest, opts ...grpc.CallOption) (*GetAnomaliesResponse, error)
+	GetUpcomingRecurring(ctx context.Context, in *GetUpcomingRecurringRequest, opts ...grpc.CallOption) (*GetUpcomingRecurringResponse, error)
 }
 
 type analyzerServiceClient struct {
@@ -59,12 +63,34 @@ func (c *analyzerServiceClient) GetForecast(ctx context.Context, in *GetForecast
 	return out, nil
 }
 
+func (c *analyzerServiceClient) GetAnomalies(ctx context.Context, in *GetAnomaliesRequest, opts ...grpc.CallOption) (*GetAnomaliesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAnomaliesResponse)
+	err := c.cc.Invoke(ctx, AnalyzerService_GetAnomalies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *analyzerServiceClient) GetUpcomingRecurring(ctx context.Context, in *GetUpcomingRecurringRequest, opts ...grpc.CallOption) (*GetUpcomingRecurringResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUpcomingRecurringResponse)
+	err := c.cc.Invoke(ctx, AnalyzerService_GetUpcomingRecurring_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AnalyzerServiceServer is the server API for AnalyzerService service.
 // All implementations must embed UnimplementedAnalyzerServiceServer
 // for forward compatibility.
 type AnalyzerServiceServer interface {
 	GetStatistics(context.Context, *GetStatisticsRequest) (*GetStatisticsResponse, error)
 	GetForecast(context.Context, *GetForecastRequest) (*GetForecastResponse, error)
+	GetAnomalies(context.Context, *GetAnomaliesRequest) (*GetAnomaliesResponse, error)
+	GetUpcomingRecurring(context.Context, *GetUpcomingRecurringRequest) (*GetUpcomingRecurringResponse, error)
 	mustEmbedUnimplementedAnalyzerServiceServer()
 }
 
@@ -80,6 +106,12 @@ func (UnimplementedAnalyzerServiceServer) GetStatistics(context.Context, *GetSta
 }
 func (UnimplementedAnalyzerServiceServer) GetForecast(context.Context, *GetForecastRequest) (*GetForecastResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetForecast not implemented")
+}
+func (UnimplementedAnalyzerServiceServer) GetAnomalies(context.Context, *GetAnomaliesRequest) (*GetAnomaliesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAnomalies not implemented")
+}
+func (UnimplementedAnalyzerServiceServer) GetUpcomingRecurring(context.Context, *GetUpcomingRecurringRequest) (*GetUpcomingRecurringResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUpcomingRecurring not implemented")
 }
 func (UnimplementedAnalyzerServiceServer) mustEmbedUnimplementedAnalyzerServiceServer() {}
 func (UnimplementedAnalyzerServiceServer) testEmbeddedByValue()                         {}
@@ -138,6 +170,42 @@ func _AnalyzerService_GetForecast_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AnalyzerService_GetAnomalies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAnomaliesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnalyzerServiceServer).GetAnomalies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AnalyzerService_GetAnomalies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnalyzerServiceServer).GetAnomalies(ctx, req.(*GetAnomaliesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AnalyzerService_GetUpcomingRecurring_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUpcomingRecurringRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnalyzerServiceServer).GetUpcomingRecurring(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AnalyzerService_GetUpcomingRecurring_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnalyzerServiceServer).GetUpcomingRecurring(ctx, req.(*GetUpcomingRecurringRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AnalyzerService_ServiceDesc is the grpc.ServiceDesc for AnalyzerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +220,14 @@ var AnalyzerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetForecast",
 			Handler:    _AnalyzerService_GetForecast_Handler,
+		},
+		{
+			MethodName: "GetAnomalies",
+			Handler:    _AnalyzerService_GetAnomalies_Handler,
+		},
+		{
+			MethodName: "GetUpcomingRecurring",
+			Handler:    _AnalyzerService_GetUpcomingRecurring_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

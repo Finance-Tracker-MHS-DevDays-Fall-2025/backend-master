@@ -187,7 +187,7 @@ func RegisterMasterServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/GetBalance", runtime.WithHTTPPathPattern("/v1/users/{user_id}/balance"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/GetBalance", runtime.WithHTTPPathPattern("/users/{user_id}/balance"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -207,7 +207,7 @@ func RegisterMasterServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/GetAnalytics", runtime.WithHTTPPathPattern("/v1/analytics"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/GetAnalytics", runtime.WithHTTPPathPattern("/analytics"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -227,7 +227,7 @@ func RegisterMasterServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/GetForecast", runtime.WithHTTPPathPattern("/v1/forecast"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/master.MasterService/GetForecast", runtime.WithHTTPPathPattern("/forecast"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -302,7 +302,7 @@ func RegisterMasterServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/GetBalance", runtime.WithHTTPPathPattern("/v1/users/{user_id}/balance"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/GetBalance", runtime.WithHTTPPathPattern("/users/{user_id}/balance"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -319,7 +319,7 @@ func RegisterMasterServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/GetAnalytics", runtime.WithHTTPPathPattern("/v1/analytics"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/GetAnalytics", runtime.WithHTTPPathPattern("/analytics"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -336,7 +336,7 @@ func RegisterMasterServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/GetForecast", runtime.WithHTTPPathPattern("/v1/forecast"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/master.MasterService/GetForecast", runtime.WithHTTPPathPattern("/forecast"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -354,9 +354,9 @@ func RegisterMasterServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 
 var (
 	pattern_MasterService_CreateTransaction_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "transactions"}, ""))
-	pattern_MasterService_GetBalance_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "users", "user_id", "balance"}, ""))
-	pattern_MasterService_GetAnalytics_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "analytics"}, ""))
-	pattern_MasterService_GetForecast_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "forecast"}, ""))
+	pattern_MasterService_GetBalance_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"users", "user_id", "balance"}, ""))
+	pattern_MasterService_GetAnalytics_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"analytics"}, ""))
+	pattern_MasterService_GetForecast_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"forecast"}, ""))
 )
 
 var (
